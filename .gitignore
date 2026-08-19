@@ -1,0 +1,15 @@
+# Windows OS files
+[Dd]esktop.ini
+Thumbs.db
+ehthumbs.db
+[Tt]humb[ss].db
+
+# macOS files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Temp files
+*~
+*.tmp
+*.temp

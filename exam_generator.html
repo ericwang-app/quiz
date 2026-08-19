@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A4 雙欄紙本考卷產生器</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-body: #f1f5f9;
+      --bg-surface: #ffffff;
+      --border-color: #cbd5e1;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --transition: all 0.2s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', 'Noto Serif TC', serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Screen Navigation Header */
+    header {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Main Container (Screen Mode) */
+    main {
+      flex: 1;
+      max-width: 1500px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Sidebar Controls */
+    .sidebar {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      height: fit-content;
+      position: sticky;
+      top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+
+    .sidebar-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .form-group input[type="text"], .form-group input[type="number"] {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: var(--primary);
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      padding: 0.75rem;
+      border-radius: 6px;
+    }
+
+    .unit-pills-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.4rem;
+    }
+
+    .unit-pill {
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.45rem 0;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+    }
+
+    .unit-pill:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .unit-pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .type-pills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.4rem;
+    }
+
+    .type-pill {
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.5rem 0.25rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .type-pill:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .type-pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .config-pills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.4rem;
+    }
+
+    .config-pill {
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.5rem 0.25rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .config-pill:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .config-pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .config-pill.full-width {
+      grid-column: span 2;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox-item input {
+      accent-color: var(--primary);
+    }
+
+    .btn-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background: #f1f5f9;
+    }
+
+    /* Paper Preview Area (Screen Mode) */
+    .preview-container {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 3rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      min-height: 1000px;
+    }
+
+    /* ---------------------------------------------------- */
+    /* EXAM PAPER STYLING (A4 DOUBLE COLUMN OPTIMIZED)     */
+    /* ---------------------------------------------------- */
+    
+    .exam-paper {
+      color: #000000;
+      background: #ffffff;
+      line-height: 1.5;
+    }
+
+    /* Header formatting */
+    .exam-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      border-bottom: 3px double #000;
+      padding-bottom: 1.25rem;
+    }
+
+    .exam-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .exam-meta-grid {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      font-size: 0.95rem;
+    }
+
+    .exam-meta-item {
+      display: inline-block;
+    }
+
+    .exam-meta-item span {
+      display: inline-block;
+      min-width: 80px;
+      border-bottom: 1px solid #000;
+      text-align: center;
+    }
+
+    /* Two column grid layout for questions */
+    .exam-body {
+      column-count: 2;
+      column-gap: 30px;
+      column-rule: 1px dashed #94a3b8;
+    }
+
+    /* Individual Question Block */
+    .exam-question-item {
+      break-inside: avoid;
+      -webkit-column-break-inside: avoid;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .question-stem {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .question-stem span {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.4rem;
+      padding-left: 1.25rem;
+    }
+
+    .option-item {
+      font-size: 0.9rem;
+    }
+
+    .option-item.correct-answer {
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    /* Teacher's Answer Key sheet styling */
+    .answer-key-section {
+      margin-top: 3rem;
+      border-top: 3px double #000;
+      padding-top: 1.5rem;
+      page-break-before: always;
+      break-before: page;
+    }
+
+    .answer-key-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .answer-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+
+    .answer-table th, .answer-table td {
+      border: 1px solid #000;
+      padding: 0.5rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .translation-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .translation-item {
+      font-size: 0.88rem;
+      border-bottom: 1px dotted #e2e8f0;
+      padding-bottom: 0.5rem;
+    }
+
+    /* ---------------------------------------------------- */
+    /* PRINT MEDIA STYLING (@media print)                   */
+    /* ---------------------------------------------------- */
+    @media print {
+      body, html {
+        background: #ffffff !important;
+        color: #000000 !important;
+        width: 210mm;
+        height: 297mm;
+      }
+
+      header, .sidebar, .btn-block, #screenHeader {
+        display: none !important;
+      }
+
+      main {
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+
+      .preview-container {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: #ffffff !important;
+      }
+
+      /* Native column formatting */
+      .exam-body {
+        column-count: 2 !important;
+        column-gap: 30px !important;
+        column-rule: 1px dashed #000000 !important;
+      }
+
+      .exam-question-item {
+        break-inside: avoid-column !important;
+        page-break-inside: avoid !important;
+      }
+
+      .translation-grid-container {
+        display: block !important;
+        margin-bottom: 1.5rem !important;
+      }
+
+      .translation-question-item {
+        break-inside: avoid-column !important;
+        page-break-inside: avoid !important;
+        margin-bottom: 0.8rem !important;
+      }
+
+      @page {
+        size: A4;
+        margin: 15mm;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Screen Header -->
+  <header id="screenHeader">
+    <div class="logo-text">
+      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+      <span>A4 雙欄考卷產生器</span>
+    </div>
+  </header>
+
+  <!-- Main layout -->
+  <main>
+    
+    <!-- Sidebar configuration -->
+    <div class="sidebar">
+      <div class="sidebar-title">考卷設定</div>
+      
+      <div class="form-group">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+          <label for="examTitleInput">考卷標題</label>
+          <button id="btnAutoTitle" style="background:none; border:none; color:var(--primary); font-size:0.75rem; font-weight:700; cursor:pointer; text-decoration:underline; padding:0;">自動生成標題</button>
+        </div>
+        <input type="text" id="examTitleInput" value="高二英文暑假成果複習測驗">
+      </div>
+
+      <div class="form-group">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+          <label>選取單元範圍</label>
+          <div style="font-size: 0.75rem;">
+            <button id="selectAllUnitsBtn" style="background:none; border:none; color:var(--primary); font-weight:700; cursor:pointer; padding:0 0.25rem;">全選</button>
+            <span style="color:var(--border-color);">|</span>
+            <button id="clearAllUnitsBtn" style="background:none; border:none; color:var(--primary); font-weight:700; cursor:pointer; padding:0 0.25rem;">全消</button>
+          </div>
+        </div>
+        <div class="unit-pills-grid" id="unitPillsContainer">
+          <!-- Dynamically filled with small buttons -->
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+          <label>選取題型</label>
+          <div style="font-size: 0.75rem;">
+            <button id="selectAllTypesBtn" style="background:none; border:none; color:var(--primary); font-weight:700; cursor:pointer; padding:0 0.25rem;">全選</button>
+            <span style="color:var(--border-color);">|</span>
+            <button id="clearAllTypesBtn" style="background:none; border:none; color:var(--primary); font-weight:700; cursor:pointer; padding:0 0.25rem;">全消</button>
+          </div>
+        </div>
+        <div class="type-pills-grid" id="typePillsContainer">
+          <div class="type-pill active" id="pillVocabTranslation">單字中翻英</div>
+          <div class="type-pill active" id="pillCloze">單字基礎</div>
+          <div class="type-pill active" id="pillClozeTransfer">單字應用</div>
+          <div class="type-pill active" id="pillPhraseCloze">片語基礎</div>
+          <div class="type-pill active" id="pillPhraseClozeTransfer">片語應用</div>
+        </div>
+        <div style="display: none;">
+          <input type="checkbox" id="typeVocabTranslation" checked>
+          <input type="checkbox" id="typeCloze" checked>
+          <input type="checkbox" id="typeClozeTransfer" checked>
+          <input type="checkbox" id="typePhraseCloze" checked>
+          <input type="checkbox" id="typePhraseClozeTransfer" checked>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="questionCountInput">出題數量</label>
+        <input type="number" id="questionCountInput" min="5" max="100" value="20">
+      </div>
+
+      <div class="form-group" style="border-top: 1px solid var(--border-color); padding-top: 1rem;">
+        <label>教師解答卷配置</label>
+        <div class="config-pills-grid" id="configPillsContainer">
+          <div class="config-pill" id="pillShowAnswers">標記答案</div>
+          <div class="config-pill" id="pillShowSources">標記來源</div>
+          <div class="config-pill" id="pillShowOptionSources">標記答案選項來源</div>
+          <div class="config-pill" id="pillShowAnswerKeyTable">附快速答案表</div>
+          <div class="config-pill" id="pillShowTranslations">附翻譯解析</div>
+          <div class="config-pill full-width" id="pillMakeAnalysisBooklet">轉為「解析題本」模式 (填入答案+顯示翻譯)</div>
+        </div>
+        <div style="display: none;">
+          <input type="checkbox" id="showAnswersOnSheet">
+          <input type="checkbox" id="showSourcesOnSheet">
+          <input type="checkbox" id="showOptionSources">
+          <input type="checkbox" id="showAnswerKeyTable" checked>
+          <input type="checkbox" id="showTranslations" checked>
+          <input type="checkbox" id="makeAnalysisBooklet">
+        </div>
+      </div>
+
+      <div class="btn-block">
+        <button class="btn btn-primary" id="btnGenerate">產生考卷預覽</button>
+        <button class="btn btn-secondary" id="btnPrint">列印考卷 / 存為 PDF</button>
+      </div>
+    </div>
+
+    <!-- Paper preview sheet -->
+    <div class="preview-container">
+      <div class="exam-paper" id="examPaperArea">
+        
+        <!-- Header -->
+        <div class="exam-header">
+          <div class="exam-title" id="paperTitle">高二英文暑假成果複習測驗</div>
+          <div class="exam-meta-grid">
+            <div class="exam-meta-item">班級：<span></span></div>
+            <div class="exam-meta-item">座號：<span></span></div>
+            <div class="exam-meta-item">姓名：<span></span></div>
+            <div class="exam-meta-item">得分：<span></span></div>
+          </div>
+        </div>
+
+        <!-- Two Column Exam Body -->
+        <div class="exam-body" id="paperBody">
+          <div class="empty-state">請點擊左側「產生考卷預覽」按鈕生成題目。</div>
+        </div>
+
+        <!-- Answer Key & Explanations sheet -->
+        <div class="answer-key-section" id="answerKeyArea" style="display: none;">
+          <div class="answer-key-title">教師版解答與例句對照表</div>
+          <table class="answer-table" id="answerKeyTable">
+            <!-- Dynamically populated answer rows -->
+          </table>
+          
+          <div class="translation-list" id="translationListContainer">
+            <!-- Dynamically populated list of translations -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Import the questions database -->
+  <script src="questions_data.js"></script>
+  <script>
+    let questionsPool = [];
+    let vocabPool = [];
+    let phrasePool = [];
+    let selectedQuestions = [];
+    let selectedUnits = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Load questions from window.questionsData instead of fetch (bypasses local CORS restrictions)
+      if (window.questionsData) {
+        questionsPool = window.questionsData.questions;
+        vocabPool = window.questionsData.vocabPool;
+        phrasePool = window.questionsData.phrasePool;
+        
+        const units = [...new Set(questionsPool.map(q => q.unit))].sort((a,b)=>a-b);
+        
+        // Load settings from localStorage
+        loadSettings(units);
+        
+        buildUnitPills(units);
+        updateUnitPillsActiveState();
+        
+        document.getElementById('selectAllUnitsBtn').addEventListener('click', () => {
+          selectedUnits = [...units];
+          updateUnitPillsActiveState();
+          saveSettings();
+        });
+        document.getElementById('clearAllUnitsBtn').addEventListener('click', () => {
+          selectedUnits = [];
+          updateUnitPillsActiveState();
+          saveSettings();
+        });
+
+        // Pill logic for Question Types
+        const typePills = {
+          'vocabTranslation': { pill: 'pillVocabTranslation', input: 'typeVocabTranslation' },
+          'cloze': { pill: 'pillCloze', input: 'typeCloze' },
+          'clozeTransfer': { pill: 'pillClozeTransfer', input: 'typeClozeTransfer' },
+          'phraseCloze': { pill: 'pillPhraseCloze', input: 'typePhraseCloze' },
+          'phraseClozeTransfer': { pill: 'pillPhraseClozeTransfer', input: 'typePhraseClozeTransfer' }
+        };
+
+        Object.keys(typePills).forEach(key => {
+          const config = typePills[key];
+          const pillEl = document.getElementById(config.pill);
+          const inputEl = document.getElementById(config.input);
+          
+          pillEl.addEventListener('click', () => {
+            const newState = !inputEl.checked;
+            inputEl.checked = newState;
+            if (newState) {
+              pillEl.classList.add('active');
+            } else {
+              pillEl.classList.remove('active');
+            }
+            saveSettings();
+          });
+        });
+
+        document.getElementById('selectAllTypesBtn').addEventListener('click', () => {
+          Object.keys(typePills).forEach(key => {
+            const config = typePills[key];
+            document.getElementById(config.input).checked = true;
+            document.getElementById(config.pill).classList.add('active');
+          });
+          saveSettings();
+        });
+
+        document.getElementById('clearAllTypesBtn').addEventListener('click', () => {
+          Object.keys(typePills).forEach(key => {
+            const config = typePills[key];
+            document.getElementById(config.input).checked = false;
+            document.getElementById(config.pill).classList.remove('active');
+          });
+          saveSettings();
+        });
+
+        generatePreview(); // Generate default set
+      } else {
+        alert("無法載入題目資料庫 questions_data.js，請確保 generate_questions_json.py 已成功執行。");
+      }
+
+      document.getElementById('btnGenerate').addEventListener('click', () => {
+        saveSettings();
+        generatePreview();
+      });
+      document.getElementById('btnPrint').addEventListener('click', () => {
+        window.print();
+      });
+      document.getElementById('btnAutoTitle').addEventListener('click', () => {
+        document.getElementById('examTitleInput').value = getAutoTitle();
+        saveSettings();
+        document.getElementById('paperTitle').textContent = document.getElementById('examTitleInput').value;
+      });
+
+      // Bind change listeners to save settings on modification
+      document.getElementById('examTitleInput').addEventListener('input', saveSettings);
+      document.getElementById('questionCountInput').addEventListener('input', saveSettings);
+
+      // Pill logic for Teacher Configurations
+      const configPills = {
+        'showAnswersOnSheet': { pill: 'pillShowAnswers', handler: () => { updateAnswerStyling(); } },
+        'showSourcesOnSheet': { pill: 'pillShowSources', handler: () => { updateSourceStyling(); } },
+        'showOptionSources': { pill: 'pillShowOptionSources', handler: () => { renderExamPaper(); } },
+        'showAnswerKeyTable': { pill: 'pillShowAnswerKeyTable', handler: () => { updateAppendixVisibility(); } },
+        'showTranslations': { pill: 'pillShowTranslations', handler: () => { updateAppendixVisibility(); } },
+        'makeAnalysisBooklet': { pill: 'pillMakeAnalysisBooklet', handler: () => { renderExamPaper(); } }
+      };
+
+      Object.keys(configPills).forEach(inputKey => {
+        const config = configPills[inputKey];
+        const pillEl = document.getElementById(config.pill);
+        const inputEl = document.getElementById(inputKey);
+        
+        pillEl.addEventListener('click', () => {
+          const newState = !inputEl.checked;
+          inputEl.checked = newState;
+          if (newState) {
+            pillEl.classList.add('active');
+          } else {
+            pillEl.classList.remove('active');
+          }
+          config.handler();
+          saveSettings();
+        });
+      });
+    });
+
+    function saveSettings() {
+      localStorage.setItem('examTitle', document.getElementById('examTitleInput').value);
+      localStorage.setItem('selectedUnits', JSON.stringify(selectedUnits));
+      localStorage.setItem('typeVocabTranslation', document.getElementById('typeVocabTranslation').checked);
+      localStorage.setItem('typeCloze', document.getElementById('typeCloze').checked);
+      localStorage.setItem('typeClozeTransfer', document.getElementById('typeClozeTransfer').checked);
+      localStorage.setItem('typePhraseCloze', document.getElementById('typePhraseCloze').checked);
+      localStorage.setItem('typePhraseClozeTransfer', document.getElementById('typePhraseClozeTransfer').checked);
+      localStorage.setItem('questionCount', document.getElementById('questionCountInput').value);
+      localStorage.setItem('showAnswersOnSheet', document.getElementById('showAnswersOnSheet').checked);
+      localStorage.setItem('showSourcesOnSheet', document.getElementById('showSourcesOnSheet').checked);
+      localStorage.setItem('showOptionSources', document.getElementById('showOptionSources').checked);
+      localStorage.setItem('makeAnalysisBooklet', document.getElementById('makeAnalysisBooklet').checked);
+      localStorage.setItem('showAnswerKeyTable', document.getElementById('showAnswerKeyTable').checked);
+      localStorage.setItem('showTranslations', document.getElementById('showTranslations').checked);
+    }
+
+    function loadSettings(units) {
+      if (localStorage.getItem('examTitle') !== null) {
+        document.getElementById('examTitleInput').value = localStorage.getItem('examTitle');
+      }
+      if (localStorage.getItem('selectedUnits') !== null) {
+        try {
+          selectedUnits = JSON.parse(localStorage.getItem('selectedUnits')).map(Number).filter(n => !isNaN(n));
+        } catch(e) {
+          selectedUnits = [...units];
+        }
+      } else {
+        selectedUnits = [...units]; // Select all by default
+      }
+      if (localStorage.getItem('typeVocabTranslation') !== null) {
+        document.getElementById('typeVocabTranslation').checked = localStorage.getItem('typeVocabTranslation') === 'true';
+      }
+      if (localStorage.getItem('typeCloze') !== null) {
+        document.getElementById('typeCloze').checked = localStorage.getItem('typeCloze') === 'true';
+      }
+      if (localStorage.getItem('typeClozeTransfer') !== null) {
+        document.getElementById('typeClozeTransfer').checked = localStorage.getItem('typeClozeTransfer') === 'true';
+      }
+      if (localStorage.getItem('typePhraseCloze') !== null) {
+        document.getElementById('typePhraseCloze').checked = localStorage.getItem('typePhraseCloze') === 'true';
+      }
+      if (localStorage.getItem('typePhraseClozeTransfer') !== null) {
+        document.getElementById('typePhraseClozeTransfer').checked = localStorage.getItem('typePhraseClozeTransfer') === 'true';
+      }
+      if (localStorage.getItem('questionCount') !== null) {
+        document.getElementById('questionCountInput').value = localStorage.getItem('questionCount');
+      }
+      if (localStorage.getItem('showAnswersOnSheet') !== null) {
+        document.getElementById('showAnswersOnSheet').checked = localStorage.getItem('showAnswersOnSheet') === 'true';
+      }
+      if (localStorage.getItem('showSourcesOnSheet') !== null) {
+        document.getElementById('showSourcesOnSheet').checked = localStorage.getItem('showSourcesOnSheet') === 'true';
+      }
+      if (localStorage.getItem('showOptionSources') !== null) {
+        document.getElementById('showOptionSources').checked = localStorage.getItem('showOptionSources') === 'true';
+      }
+      if (localStorage.getItem('makeAnalysisBooklet') !== null) {
+        document.getElementById('makeAnalysisBooklet').checked = localStorage.getItem('makeAnalysisBooklet') === 'true';
+      }
+      if (localStorage.getItem('showAnswerKeyTable') !== null) {
+        document.getElementById('showAnswerKeyTable').checked = localStorage.getItem('showAnswerKeyTable') === 'true';
+      }
+      if (localStorage.getItem('showTranslations') !== null) {
+        document.getElementById('showTranslations').checked = localStorage.getItem('showTranslations') === 'true';
+      }
+      updateTypePillsActiveState();
+      updateConfigPillsActiveState();
+    }
+
+    function updateConfigPillsActiveState() {
+      const configPills = {
+        'showAnswersOnSheet': 'pillShowAnswers',
+        'showSourcesOnSheet': 'pillShowSources',
+        'showOptionSources': 'pillShowOptionSources',
+        'showAnswerKeyTable': 'pillShowAnswerKeyTable',
+        'showTranslations': 'pillShowTranslations',
+        'makeAnalysisBooklet': 'pillMakeAnalysisBooklet'
+      };
+      Object.keys(configPills).forEach(inputKey => {
+        const pillId = configPills[inputKey];
+        const pill = document.getElementById(pillId);
+        const input = document.getElementById(inputKey);
+        if (input.checked) {
+          pill.classList.add('active');
+        } else {
+          pill.classList.remove('active');
+        }
+      });
+    }
+
+    function updateTypePillsActiveState() {
+      const typePills = {
+        'vocabTranslation': { pill: 'pillVocabTranslation', input: 'typeVocabTranslation' },
+        'cloze': { pill: 'pillCloze', input: 'typeCloze' },
+        'clozeTransfer': { pill: 'pillClozeTransfer', input: 'typeClozeTransfer' },
+        'phraseCloze': { pill: 'pillPhraseCloze', input: 'typePhraseCloze' },
+        'phraseClozeTransfer': { pill: 'pillPhraseClozeTransfer', input: 'typePhraseClozeTransfer' }
+      };
+      Object.keys(typePills).forEach(key => {
+        const config = typePills[key];
+        const pill = document.getElementById(config.pill);
+        const input = document.getElementById(config.input);
+        if (input.checked) {
+          pill.classList.add('active');
+        } else {
+          pill.classList.remove('active');
+        }
+      });
+    }
+
+    function getAutoTitle() {
+      let unitsStr = '';
+      if (selectedUnits.length === 0) {
+        unitsStr = '無選取範圍';
+      } else {
+        const sorted = [...selectedUnits].sort((a, b) => a - b);
+        let ranges = [];
+        let start = sorted[0];
+        let prev = sorted[0];
+        for (let i = 1; i < sorted.length; i++) {
+          if (sorted[i] === prev + 1) {
+            prev = sorted[i];
+          } else {
+            if (start === prev) {
+              ranges.push(`U${start}`);
+            } else {
+              ranges.push(`U${start}-U${prev}`);
+            }
+            start = sorted[i];
+            prev = sorted[i];
+          }
+        }
+        if (start === prev) {
+          ranges.push(`U${start}`);
+        } else {
+          ranges.push(`U${start}-U${prev}`);
+        }
+        unitsStr = ranges.join(', ');
+      }
+
+      const hasTrans = document.getElementById('typeVocabTranslation').checked;
+      const hasCloze = document.getElementById('typeCloze').checked;
+      const hasClozeT = document.getElementById('typeClozeTransfer').checked;
+      const hasPhrase = document.getElementById('typePhraseCloze').checked;
+      const hasPhraseT = document.getElementById('typePhraseClozeTransfer').checked;
+      
+      let vocabStr = '';
+      if (hasCloze && hasClozeT) vocabStr = '單字基礎應用';
+      else if (hasCloze) vocabStr = '單字基礎';
+      else if (hasClozeT) vocabStr = '單字應用';
+
+      let phraseStr = '';
+      if (hasPhrase && hasPhraseT) phraseStr = '片語基礎應用';
+      else if (hasPhrase) phraseStr = '片語基礎';
+      else if (hasPhraseT) phraseStr = '片語應用';
+
+      let typesStr = '';
+      if (vocabStr && phraseStr) {
+        if (hasCloze === hasPhrase && hasClozeT === hasPhraseT) {
+          if (hasCloze && hasClozeT) typesStr = '單字與片語基礎應用';
+          else if (hasCloze) typesStr = '單字與片語基礎';
+          else if (hasClozeT) typesStr = '單字與片語應用';
+        } else {
+          typesStr = `${vocabStr}+${phraseStr}`;
+        }
+      } else {
+        typesStr = vocabStr || phraseStr;
+      }
+
+      if (hasTrans) {
+        if (typesStr) {
+          if (hasCloze && hasClozeT && hasPhrase && hasPhraseT) {
+            typesStr = '單字與片語綜合測驗';
+          } else {
+            typesStr = `單字中翻英+${typesStr}`;
+          }
+        } else {
+          typesStr = '單字中翻英';
+        }
+      } else {
+        if (!typesStr) typesStr = '未選題型';
+      }
+
+      return `${unitsStr} (${typesStr}) 複習測驗`;
+    }
+
+    // Populate unit selector pills
+    function buildUnitPills(units) {
+      const container = document.getElementById('unitPillsContainer');
+      container.innerHTML = '';
+      
+      units.forEach(u => {
+        const pill = document.createElement('div');
+        pill.className = 'unit-pill';
+        pill.dataset.unit = u;
+        pill.textContent = `U${u}`;
+        
+        pill.addEventListener('click', () => {
+          if (selectedUnits.includes(u)) {
+            selectedUnits = selectedUnits.filter(val => val !== u);
+            pill.classList.remove('active');
+          } else {
+            selectedUnits.push(u);
+            pill.classList.add('active');
+          }
+          saveSettings();
+        });
+        
+        container.appendChild(pill);
+      });
+    }
+
+    function updateUnitPillsActiveState() {
+      document.querySelectorAll('.unit-pill').forEach(pill => {
+        const u = parseInt(pill.dataset.unit);
+        if (selectedUnits.includes(u)) {
+          pill.classList.add('active');
+        } else {
+          pill.classList.remove('active');
+        }
+      });
+    }
+
+    function inflectWord(base, inflected, target) {
+      const baseLower = base.toLowerCase();
+      const inflectedLower = inflected.toLowerCase();
+      const targetLower = target.toLowerCase();
+      
+      if (baseLower === inflectedLower) return target;
+      
+      // 1. Check gerund (ing)
+      if (inflectedLower.endsWith('ing') && !baseLower.endsWith('ing')) {
+        let isDoubled = false;
+        if (baseLower.length >= 2) {
+          const lastChar = baseLower[baseLower.length - 1];
+          if (inflectedLower.endsWith(lastChar + 'ing') && !baseLower.endsWith(lastChar)) {
+            isDoubled = true;
+          }
+        }
+        
+        let t = target;
+        if (t.endsWith('e') && !t.endsWith('ee') && !t.endsWith('ye') && !t.endsWith('oe')) {
+          t = t.slice(0, -1);
+        }
+        if (isDoubled && t.length > 0) {
+          const last = t[t.length - 1];
+          if ('bcdfghjklmnpqrstvwxyz'.includes(last)) {
+            t = t + last;
+          }
+        }
+        return matchCase(target, t + 'ing');
+      }
+      
+      // 2. Check past tense / participle (ed)
+      if (inflectedLower.endsWith('ed') && !baseLower.endsWith('ed')) {
+        if (baseLower.endsWith('y') && inflectedLower.endsWith('ied')) {
+          let t = target;
+          if (t.endsWith('y')) {
+            t = t.slice(0, -1) + 'ied';
+          } else {
+            t = t + 'ed';
+          }
+          return matchCase(target, t);
+        }
+        
+        let isDoubled = false;
+        if (baseLower.length >= 2) {
+          const lastChar = baseLower[baseLower.length - 1];
+          if (inflectedLower.endsWith(lastChar + 'ed') && !baseLower.endsWith(lastChar)) {
+            isDoubled = true;
+          }
+        }
+        
+        let t = target;
+        if (t.endsWith('e')) {
+          return matchCase(target, t + 'd');
+        }
+        if (isDoubled && t.length > 0) {
+          const last = t[t.length - 1];
+          if ('bcdfghjklmnpqrstvwxyz'.includes(last)) {
+            t = t + last;
+          }
+        }
+        return matchCase(target, t + 'ed');
+      }
+      
+      // 3. Check plurals / third person (s/es/ies)
+      if (inflectedLower.endsWith('s') && !baseLower.endsWith('s')) {
+        if (baseLower.endsWith('y') && inflectedLower.endsWith('ies')) {
+          let t = target;
+          if (t.endsWith('y')) {
+            t = t.slice(0, -1) + 'ies';
+          } else {
+            t = t + 's';
+          }
+          return matchCase(target, t);
+        }
+        
+        if (inflectedLower.endsWith('es') && !baseLower.endsWith('es')) {
+          let t = target;
+          if (t.endsWith('e')) {
+            return matchCase(target, t + 's');
+          }
+          if (t.endsWith('s') || t.endsWith('x') || t.endsWith('ch') || t.endsWith('sh')) {
+            return matchCase(target, t + 'es');
+          }
+          return matchCase(target, t + 's');
+        }
+        
+        return matchCase(target, target + 's');
+      }
+      
+      return target;
+    }
+
+    function matchCase(source, target) {
+      if (source === source.toUpperCase()) return target.toUpperCase();
+      if (source[0] === source[0].toUpperCase()) {
+        return target[0].toUpperCase() + target.slice(1);
+      }
+      return target;
+    }
+
+    function pickThreeDistractors(sameUnitSamePos, otherSelectedSamePos, unselectedSamePos, sameUnitOtherPos, otherSelectedOtherPos, unselectedOtherPos, sameUnitQuota, otherSelectedQuota) {
+      const chosen = [];
+      const draw = (pool, count) => {
+        const drawn = [];
+        while (pool.length > 0 && drawn.length < count) {
+          drawn.push(pool.shift());
+        }
+        return drawn;
+      };
+      
+      // 1. Draw from same unit same POS based on dynamic quota
+      chosen.push(...draw(sameUnitSamePos, sameUnitQuota));
+      
+      // 2. Draw from other selected same POS based on dynamic quota
+      chosen.push(...draw(otherSelectedSamePos, otherSelectedQuota));
+      
+      // 3. Fallback: If still need more, draw remaining from otherSelectedSamePos
+      let needed = 3 - chosen.length;
+      if (needed > 0) chosen.push(...draw(otherSelectedSamePos, needed));
+      
+      // 4. Fallback: If still need more, draw remaining from sameUnitSamePos
+      needed = 3 - chosen.length;
+      if (needed > 0) chosen.push(...draw(sameUnitSamePos, needed));
+      
+      // 5. Fallback: If still need more, draw from unselected same POS
+      needed = 3 - chosen.length;
+      if (needed > 0) chosen.push(...draw(unselectedSamePos, needed));
+      
+      // 6. Fallback: If still need more, draw from same unit other POS based on sameUnitQuota
+      needed = 3 - chosen.length;
+      if (needed > 0) chosen.push(...draw(sameUnitOtherPos, sameUnitQuota));
+      
+      // 7. Fallback: If still need more, draw from other selected other POS based on otherSelectedQuota
+      needed = 3 - chosen.length;
+      if (needed > 0) chosen.push(...draw(otherSelectedOtherPos, otherSelectedQuota));
+      
+      // 8. Fallback: If still need more, draw remaining from otherSelectedOtherPos
+      needed = 3 - chosen.length;
+      if (needed > 0) chosen.push(...draw(otherSelectedOtherPos, needed));
+      
+      // 9. Fallback: If still need more, draw remaining from sameUnitOtherPos
+      needed = 3 - chosen.length;
+      if (needed > 0) chosen.push(...draw(sameUnitOtherPos, needed));
+      
+      // 10. Fallback: If still need more, draw from unselected other POS
+      needed = 3 - chosen.length;
+      if (needed > 0) chosen.push(...draw(unselectedOtherPos, needed));
+      
+      return chosen;
+    }
+
+    function generateVocabOptions(q, selectedUnits, vocabPool) {
+      const sameUnitSamePos = [];
+      const otherSelectedSamePos = [];
+      const unselectedSamePos = [];
+      const sameUnitOtherPos = [];
+      const otherSelectedOtherPos = [];
+      const unselectedOtherPos = [];
+      
+      const targetWord = q.correct_answer.toLowerCase();
+      const targetPos = q.pos;
+      const targetUnit = q.unit;
+      
+      vocabPool.forEach(item => {
+        const wLower = item.word.toLowerCase();
+        if (wLower === q.base_word.toLowerCase()) return;
+        
+        const isSameUnit = item.unit === targetUnit;
+        const isSelectedUnit = selectedUnits.includes(item.unit);
+        const isSamePos = item.pos === targetPos;
+        
+        if (isSamePos) {
+          if (isSameUnit) sameUnitSamePos.push(item);
+          else if (isSelectedUnit) otherSelectedSamePos.push(item);
+          else unselectedSamePos.push(item);
+        } else {
+          if (isSameUnit) sameUnitOtherPos.push(item);
+          else if (isSelectedUnit) otherSelectedOtherPos.push(item);
+          else unselectedOtherPos.push(item);
+        }
+      });
+      
+      const shuffle = arr => arr.sort(() => Math.random() - 0.5);
+      shuffle(sameUnitSamePos);
+      shuffle(otherSelectedSamePos);
+      shuffle(unselectedSamePos);
+      shuffle(sameUnitOtherPos);
+      shuffle(otherSelectedOtherPos);
+      shuffle(unselectedOtherPos);
+      
+      // Randomly allocate quotas (1~2 for same unit, 0~2 for other selected units)
+      const pairs = [
+        [2, 1], [1, 2], [2, 0], [1, 1], [1, 0]
+      ];
+      const chosenPair = pairs[Math.floor(Math.random() * pairs.length)];
+      const sameUnitQuota = chosenPair[0];
+      const otherSelectedQuota = chosenPair[1];
+
+      const distractors = pickThreeDistractors(
+        sameUnitSamePos, otherSelectedSamePos, unselectedSamePos,
+        sameUnitOtherPos, otherSelectedOtherPos, unselectedOtherPos,
+        sameUnitQuota, otherSelectedQuota
+      );
+      
+      const inflected = distractors.map(d => ({
+        word: inflectWord(q.base_word, q.correct_answer, d.word),
+        unit: d.unit
+      }));
+      
+      const allOptions = [...inflected, { word: q.correct_answer, unit: q.unit }];
+      shuffle(allOptions);
+      
+      q.optionUnits = allOptions.map(o => o.unit);
+      return allOptions.map(o => o.word);
+    }
+
+    function getPhraseEnding(phrase) {
+      const words = phrase.trim().split(/\s+/);
+      if (words.length === 0) return '';
+      const lastWord = words[words.length - 1].toLowerCase();
+      const particles = ['to', 'in', 'on', 'upon', 'from', 'of', 'with', 'for', 'about', 'at', 'by', 'up', 'down', 'out', 'away', 'back'];
+      if (particles.includes(lastWord)) {
+        return lastWord;
+      }
+      return 'no-prep';
+    }
+
+    function generatePhraseOptions(q, selectedUnits, phrasePool) {
+      const sameUnitSamePrep = [];
+      const otherSelectedSamePrep = [];
+      const unselectedSamePrep = [];
+      const sameUnitOtherPrep = [];
+      const otherSelectedOtherPrep = [];
+      const unselectedOtherPrep = [];
+      
+      const targetPhrase = q.correct_answer.toLowerCase();
+      const targetPrep = getPhraseEnding(q.correct_answer);
+      const targetUnit = q.unit;
+      
+      phrasePool.forEach(item => {
+        const phLower = item.phrase.toLowerCase();
+        if (phLower === targetPhrase) return;
+        
+        const isSameUnit = item.unit === targetUnit;
+        const isSelectedUnit = selectedUnits.includes(item.unit);
+        const itemPrep = getPhraseEnding(item.phrase);
+        const isSamePrep = itemPrep === targetPrep;
+        
+        if (isSamePrep) {
+          if (isSameUnit) sameUnitSamePrep.push(item);
+          else if (isSelectedUnit) otherSelectedSamePrep.push(item);
+          else unselectedSamePrep.push(item);
+        } else {
+          if (isSameUnit) sameUnitOtherPrep.push(item);
+          else if (isSelectedUnit) otherSelectedOtherPrep.push(item);
+          else unselectedOtherPrep.push(item);
+        }
+      });
+      
+      const shuffle = arr => arr.sort(() => Math.random() - 0.5);
+      shuffle(sameUnitSamePrep);
+      shuffle(otherSelectedSamePrep);
+      shuffle(unselectedSamePrep);
+      shuffle(sameUnitOtherPrep);
+      shuffle(otherSelectedOtherPrep);
+      shuffle(unselectedOtherPrep);
+      
+      // Randomly allocate quotas (1~2 for same unit, 0~2 for other selected units)
+      const pairs = [
+        [2, 1], [1, 2], [2, 0], [1, 1], [1, 0]
+      ];
+      const chosenPair = pairs[Math.floor(Math.random() * pairs.length)];
+      const sameUnitQuota = chosenPair[0];
+      const otherSelectedQuota = chosenPair[1];
+
+      const distractors = pickThreeDistractors(
+        sameUnitSamePrep, otherSelectedSamePrep, unselectedSamePrep,
+        sameUnitOtherPrep, otherSelectedOtherPrep, unselectedOtherPrep,
+        sameUnitQuota, otherSelectedQuota
+      );
+      
+      const allOptions = distractors.map(d => ({ word: d.phrase, unit: d.unit }));
+      allOptions.push({ word: q.correct_answer, unit: q.unit });
+      shuffle(allOptions);
+      
+      q.optionUnits = allOptions.map(o => o.unit);
+      return allOptions.map(o => o.word);
+    }
+
+    // Generate Preview logic
+    function generatePreview() {
+      // Automatically generate title and sync to the input field
+      const autoTitle = getAutoTitle();
+      document.getElementById('examTitleInput').value = autoTitle;
+      saveSettings();
+
+      // 1. Get configuration settings
+      const examTitle = autoTitle;
+      const count = parseInt(document.getElementById('questionCountInput').value);
+
+      const checkedUnits = selectedUnits;
+      const includeVocabTranslation = document.getElementById('typeVocabTranslation').checked;
+      const includeCloze = document.getElementById('typeCloze').checked;
+      const includeClozeTransfer = document.getElementById('typeClozeTransfer').checked;
+      const includePhraseCloze = document.getElementById('typePhraseCloze').checked;
+      const includePhraseClozeTransfer = document.getElementById('typePhraseClozeTransfer').checked;
+
+      // Update paper title
+      document.getElementById('paperTitle').textContent = examTitle;
+
+      if (checkedUnits.length === 0) {
+        alert("請至少選取一個單元作為範圍！");
+        return;
+      }
+      if (!includeVocabTranslation && !includeCloze && !includeClozeTransfer && !includePhraseCloze && !includePhraseClozeTransfer) {
+        alert("請至少選擇一種題型！");
+        return;
+      }
+
+      // 2. Filter Pool
+      let filteredPool = questionsPool.filter(q => {
+        const unitMatch = checkedUnits.includes(q.unit);
+        const typeMatch = (q.type === 'vocabTranslation' && includeVocabTranslation) ||
+                          (q.type === 'cloze' && includeCloze) ||
+                          (q.type === 'clozeTransfer' && includeClozeTransfer) ||
+                          (q.type === 'phraseCloze' && includePhraseCloze) ||
+                          (q.type === 'phraseClozeTransfer' && includePhraseClozeTransfer);
+        return unitMatch && typeMatch;
+      });
+
+      if (filteredPool.length === 0) {
+        document.getElementById('paperBody').innerHTML = '<div class="empty-state">在此單元與題型範圍內沒有找到符合的題目。</div>';
+        document.getElementById('answerKeyArea').style.display = 'none';
+        return;
+      }
+
+      // 3. Shuffle and pick
+      filteredPool.sort(() => Math.random() - 0.5);
+      selectedQuestions = filteredPool.slice(0, count);
+
+      // Dynamically generate options based on currently selected units
+      selectedQuestions.forEach(q => {
+        if (q.type === 'cloze' || q.type === 'clozeTransfer') {
+          q.options = generateVocabOptions(q, checkedUnits, vocabPool);
+        } else if (q.type === 'phraseCloze' || q.type === 'phraseClozeTransfer') {
+          q.options = generatePhraseOptions(q, checkedUnits, phrasePool);
+        }
+      });
+
+      // 4. Render to Paper Body
+      renderExamPaper();
+    }
+
+    function renderExamPaper() {
+      if (selectedQuestions.length === 0) return;
+      
+      const examTitle = document.getElementById('examTitleInput').value;
+      document.getElementById('paperTitle').textContent = examTitle;
+
+      const paperBody = document.getElementById('paperBody');
+      paperBody.innerHTML = '';
+
+      const isAnalysisMode = document.getElementById('makeAnalysisBooklet').checked;
+      const showOptionSources = document.getElementById('showOptionSources').checked;
+
+      // Group questions
+      const vocabTranslationQuestions = selectedQuestions.filter(q => q.type === 'vocabTranslation');
+      const clozeQuestions = selectedQuestions.filter(q => q.type !== 'vocabTranslation');
+
+      // 1. Render Part I: Vocab Translation (單字中翻英)
+      if (vocabTranslationQuestions.length > 0) {
+        const part1Header = document.createElement('h3');
+        part1Header.className = 'part-header';
+        part1Header.style.fontSize = '1.05rem';
+        part1Header.style.borderBottom = '1.5px solid var(--text-dark)';
+        part1Header.style.paddingBottom = '0.2rem';
+        part1Header.style.marginTop = '0.8rem';
+        part1Header.style.marginBottom = '0.8rem';
+        part1Header.textContent = 'I. 單字中翻英 (請寫出對應的英文單字原型)';
+        paperBody.appendChild(part1Header);
+
+        const gridContainer = document.createElement('div');
+        gridContainer.className = 'translation-grid-container';
+        gridContainer.style.display = 'grid';
+        gridContainer.style.gridTemplateColumns = '1fr 1fr';
+        gridContainer.style.gap = '0.6rem 2.5rem';
+        gridContainer.style.marginBottom = '1.5rem';
+
+        vocabTranslationQuestions.forEach((q) => {
+          const overallIndex = selectedQuestions.indexOf(q) + 1;
+          const item = document.createElement('div');
+          item.className = 'translation-question-item';
+          item.style.fontSize = '0.95rem';
+          item.style.lineHeight = '1.6';
+          item.style.display = 'flex';
+          item.style.justifyContent = 'space-between';
+          item.style.alignItems = 'baseline';
+          item.style.borderBottom = '1px dashed #cbd5e1';
+          item.style.paddingBottom = '0.15rem';
+
+          let sourceLabel = '中翻英';
+          const sourceHtml = `<span class="question-source-tag" style="display: none; font-size: 0.8rem; color: #64748b; font-weight: normal; margin-left: 0.5rem; border: 1px solid #cbd5e1; padding: 0.05rem 0.25rem; border-radius: 4px; font-family: sans-serif;">[U${q.unit}-${sourceLabel}]</span>`;
+
+          const showAnswer = document.getElementById('showAnswersOnSheet').checked || isAnalysisMode;
+          const underlineVal = showAnswer 
+            ? `<span style="font-family: var(--font-primary); font-weight: 700; color: var(--primary); text-decoration: underline; padding: 0 0.5rem;">${q.correct_answer}</span>`
+            : `<span style="display: inline-block; width: 140px; border-bottom: 1.5px solid var(--text-dark); margin-left: 0.5rem; height: 1.2rem; vertical-align: bottom;"></span>`;
+
+          item.innerHTML = `
+            <span>
+              <strong>${overallIndex}.</strong> ${q.chinese} (${q.raw_pos})${sourceHtml}
+            </span>
+            ${underlineVal}
+          `;
+          gridContainer.appendChild(item);
+        });
+
+        paperBody.appendChild(gridContainer);
+      }
+
+      // 2. Render Part II: Cloze test (克漏字選擇)
+      if (clozeQuestions.length > 0) {
+        const part2Header = document.createElement('h3');
+        part2Header.className = 'part-header';
+        part2Header.style.fontSize = '1.05rem';
+        part2Header.style.borderBottom = '1.5px solid var(--text-dark)';
+        part2Header.style.paddingBottom = '0.2rem';
+        part2Header.style.marginTop = '1.2rem';
+        part2Header.style.marginBottom = '0.8rem';
+        part2Header.textContent = vocabTranslationQuestions.length > 0 
+          ? 'II. 克漏字與搭配詞選擇' 
+          : 'I. 克漏字與搭配詞選擇';
+        paperBody.appendChild(part2Header);
+
+        clozeQuestions.forEach((q) => {
+          const overallIndex = selectedQuestions.indexOf(q) + 1;
+          const item = document.createElement('div');
+          item.className = 'exam-question-item';
+          
+          let stemText = '';
+          let explanationHtml = '';
+
+          if (isAnalysisMode) {
+            const filledSentence = q.sentence.replace('______', `<u style="font-weight: bold; text-decoration: underline;">${q.correct_answer}</u>`);
+            stemText = `${overallIndex}. ${filledSentence}`;
+            explanationHtml = `<div class="question-translation" style="font-size: 0.85rem; color: var(--text-muted); font-style: italic; margin-top: 0.15rem; margin-bottom: 0.4rem; padding-left: 0.25rem; border-left: 2px solid var(--border-color);">(例句翻譯：${q.translation})</div>`;
+          } else {
+            stemText = `${overallIndex}. ${q.sentence}`;
+          }
+
+          let sourceLabel = '';
+          if (q.type === 'cloze') sourceLabel = '單字基礎';
+          else if (q.type === 'clozeTransfer') sourceLabel = '單字應用';
+          else if (q.type === 'phraseCloze') sourceLabel = '片語基礎';
+          else if (q.type === 'phraseClozeTransfer') sourceLabel = '片語應用';
+
+          const sourceHtml = `<span class="question-source-tag" style="display: none; font-size: 0.8rem; color: #64748b; font-weight: normal; margin-left: 0.5rem; border: 1px solid #cbd5e1; padding: 0.05rem 0.25rem; border-radius: 4px; font-family: sans-serif;">[U${q.unit}-${sourceLabel}]</span>`;
+
+          const letters = ['A', 'B', 'C', 'D'];
+          let optionsHtml = '';
+          q.options.forEach((opt, oIdx) => {
+            const isCorrect = opt === q.correct_answer;
+            const isCorrectClass = (isCorrect && isAnalysisMode) ? 'correct-answer' : '';
+            let optText = opt;
+            if (showOptionSources && q.optionUnits && q.optionUnits[oIdx]) {
+              optText += ` (U${q.optionUnits[oIdx]})`;
+            }
+            optionsHtml += `
+              <div class="option-item ${isCorrectClass}" data-answer="${isCorrect}">
+                (${letters[oIdx]}) ${optText}
+              </div>
+            `;
+          });
+
+          item.innerHTML = `
+            <div class="question-stem">${stemText}${sourceHtml}</div>
+            ${explanationHtml}
+            <div class="options-grid">${optionsHtml}</div>
+          `;
+          paperBody.appendChild(item);
+        });
+      }
+
+      // Render Answer sheet elements
+      renderAnswerKeySheet();
+      updateAnswerStyling();
+      updateSourceStyling();
+      updateAppendixVisibility();
+    }
+
+    // Toggle showing answers on the exam preview
+    function updateAnswerStyling() {
+      const show = document.getElementById('showAnswersOnSheet').checked;
+      const correctMarks = document.querySelectorAll('.option-item');
+      correctMarks.forEach(item => {
+        if (item.dataset.answer === 'true') {
+          if (show) {
+            item.classList.add('correct-answer');
+          } else {
+            item.classList.remove('correct-answer');
+          }
+        }
+      });
+    }
+
+    // Toggle showing sources on the exam preview
+    function updateSourceStyling() {
+      const show = document.getElementById('showSourcesOnSheet').checked;
+      document.querySelectorAll('.question-source-tag').forEach(tag => {
+        tag.style.display = show ? 'inline-block' : 'none';
+      });
+    }
+
+    function updateAppendixVisibility() {
+      const showTable = document.getElementById('showAnswerKeyTable').checked;
+      const showTrans = document.getElementById('showTranslations').checked;
+      
+      const keyArea = document.getElementById('answerKeyArea');
+      const table = document.getElementById('answerKeyTable');
+      const transContainer = document.getElementById('translationListContainer');
+      const keyTitle = document.querySelector('.answer-key-title');
+
+      table.style.display = showTable ? 'table' : 'none';
+      transContainer.style.display = showTrans ? 'flex' : 'none';
+      keyTitle.style.display = (showTable || showTrans) ? 'block' : 'none';
+      keyArea.style.display = (showTable || showTrans) ? 'block' : 'none';
+    }
+
+    // Populate the appendix with answer table and translation lists
+    function renderAnswerKeySheet() {
+      const table = document.getElementById('answerKeyTable');
+      const transList = document.getElementById('translationListContainer');
+      table.innerHTML = '';
+      transList.innerHTML = '';
+
+      const letters = ['A', 'B', 'C', 'D'];
+      let tableHtml = '';
+      const chunkSize = 10;
+      
+      for (let i = 0; i < selectedQuestions.length; i += chunkSize) {
+        const chunk = selectedQuestions.slice(i, i + chunkSize);
+        let headerRow = '<tr>';
+        let answerRow = '<tr>';
+        
+        chunk.forEach((q, cIdx) => {
+          const idx = i + cIdx;
+          let correctValue = '';
+          if (q.type === 'vocabTranslation') {
+            correctValue = q.correct_answer;
+          } else {
+            const correctLetterIdx = q.options.indexOf(q.correct_answer);
+            correctValue = letters[correctLetterIdx] || '';
+          }
+          
+          headerRow += `<th>${idx + 1}</th>`;
+          answerRow += `<td><strong>${correctValue}</strong></td>`;
+        });
+        
+        headerRow += '</tr>';
+        answerRow += '</tr>';
+        tableHtml += headerRow + answerRow;
+      }
+      
+      table.innerHTML = tableHtml;
+
+      // Populate translations for cloze/clozeTransfer/phraseCloze/phraseClozeTransfer questions
+      let transCount = 0;
+      selectedQuestions.forEach((q, idx) => {
+        if ((q.type === 'cloze' || q.type === 'clozeTransfer' || q.type === 'phraseCloze' || q.type === 'phraseClozeTransfer') && q.translation) {
+          transCount++;
+          const item = document.createElement('div');
+          item.className = 'translation-item';
+          
+          let typeLabel = '';
+          if (q.type === 'cloze') typeLabel = '單字基礎';
+          else if (q.type === 'clozeTransfer') typeLabel = '單字應用';
+          else if (q.type === 'phraseCloze') typeLabel = '片語基礎';
+          else if (q.type === 'phraseClozeTransfer') typeLabel = '片語應用';
+
+          item.innerHTML = `
+            <strong>第 ${idx + 1} 題例句對照 (${typeLabel})：</strong><br>
+            ${q.sentence.replace('______', '<u>' + q.correct_answer + '</u>')}<br>
+            <span style="color: var(--text-muted);">${q.translation}</span>
+          `;
+          transList.appendChild(item);
+        }
+      });
+
+      if (transCount === 0) {
+        transList.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem;">本考卷無克漏字例句題。</div>';
+      }
+    }
+  </script>
+
+</body>
+</html>
