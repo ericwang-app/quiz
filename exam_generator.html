@@ -592,6 +592,7 @@
             <div class="exam-meta-item">姓名：<span></span></div>
             <div class="exam-meta-item">得分：<span></span></div>
           </div>
+          <div style="font-size:0.75rem; color:#94a3b8; margin-top:0.5rem; text-align:right; font-family:monospace;">試卷編號：<span id="paperSerialCode"></span></div>
         </div>
 
         <!-- Two Column Exam Body -->
@@ -602,6 +603,7 @@
         <!-- Answer Key & Explanations sheet -->
         <div class="answer-key-section" id="answerKeyArea" style="display: none;">
           <div class="answer-key-title">教師版解答與例句對照表</div>
+          <div style="font-size:0.8rem; color:#64748b; text-align:center; margin-bottom:0.75rem; font-family:monospace;">試卷編號：<strong id="answerSerialCode" style="color:#1e293b;"></strong></div>
           <table class="answer-table" id="answerKeyTable">
             <!-- Dynamically populated answer rows -->
           </table>
@@ -1266,6 +1268,11 @@
       document.getElementById('examTitleInput').value = autoTitle;
       saveSettings();
 
+      // Generate a fresh serial code for this new exam generation
+      const now = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      window.currentSerialCode = `${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`;
+
       // 1. Get configuration settings
       const examTitle = autoTitle;
       const count = parseInt(document.getElementById('questionCountInput').value);
@@ -1328,6 +1335,15 @@
       
       const examTitle = document.getElementById('examTitleInput').value;
       document.getElementById('paperTitle').textContent = examTitle;
+
+      // Assign serial code if not yet set for this generation
+      if (!window.currentSerialCode) {
+        const now = new Date();
+        const pad = n => String(n).padStart(2, '0');
+        window.currentSerialCode = `${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`;
+      }
+      document.getElementById('paperSerialCode').textContent = window.currentSerialCode;
+      document.getElementById('answerSerialCode').textContent = window.currentSerialCode;
 
       const paperBody = document.getElementById('paperBody');
       paperBody.innerHTML = '';
