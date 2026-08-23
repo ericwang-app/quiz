@@ -560,18 +560,18 @@ window.questionsData = {
       "id": "U2-P-be_bound_to_V.-phraseCloze",
       "unit": 2,
       "type": "phraseCloze",
-      "sentence": "With so much practice, Monica ______ her skills.",
+      "sentence": "With so much practice, Monica ______ improve her skills.",
       "translation": "練習這麼多，莫妮卡的技巧一定會有所進步。",
-      "correct_answer": "is bound to improve",
+      "correct_answer": "is bound to",
       "options": []
     },
     {
       "id": "U2-P-be_bound_to_V.-phraseClozeTransfer",
       "unit": 2,
       "type": "phraseClozeTransfer",
-      "sentence": "If you work hard and stay positive, you ______ eventually.",
+      "sentence": "If you work hard and stay positive, you ______ succeed eventually.",
       "translation": "如果你努力工作並保持積極，你終將會成功。",
-      "correct_answer": "are bound to succeed",
+      "correct_answer": "are bound to",
       "options": []
     },
     {
@@ -1354,18 +1354,18 @@ window.questionsData = {
       "id": "U3-P-flood_sth_with_sth-phraseCloze",
       "unit": 3,
       "type": "phraseCloze",
-      "sentence": "Fans ______ of support after the concert.",
+      "sentence": "Fans ______ messages of support after the concert.",
       "translation": "演唱會後，歌迷們以大量支持留言湧入這位歌手的社群媒體帳號。",
-      "correct_answer": "flooded the singer's social media accounts with messages",
+      "correct_answer": "flooded the singer's social media accounts with",
       "options": []
     },
     {
       "id": "U3-P-flood_sth_with_sth-phraseClozeTransfer",
       "unit": 3,
       "type": "phraseClozeTransfer",
-      "sentence": "The fans ______ when the team scored.",
+      "sentence": "The fans ______ cheers when the team scored.",
       "translation": "當球隊得分時，球迷的歡呼聲湧入了整個體育場。",
-      "correct_answer": "flooded the stadium with cheers",
+      "correct_answer": "flooded the stadium with",
       "options": []
     },
     {
@@ -1746,36 +1746,36 @@ window.questionsData = {
       "id": "U4-P-have_been_meaning_to_V.-phraseCloze",
       "unit": 4,
       "type": "phraseCloze",
-      "sentence": "______ you, but I've been extremely busy lately.",
+      "sentence": "______ call you, but I've been extremely busy lately.",
       "translation": "我一直很想打電話給你，但我最近實在太忙了。",
-      "correct_answer": "I've been meaning to call",
+      "correct_answer": "I've been meaning to",
       "options": []
     },
     {
       "id": "U4-P-have_been_meaning_to_V.-phraseClozeTransfer",
       "unit": 4,
       "type": "phraseClozeTransfer",
-      "sentence": "I ______ you, but I've been extremely busy lately.",
+      "sentence": "I ______ call you, but I've been extremely busy lately.",
       "translation": "我一直很想打電話給你，但最近我實在太忙了。",
-      "correct_answer": "have been meaning to call",
+      "correct_answer": "have been meaning to",
       "options": []
     },
     {
       "id": "U4-P-be_in_the_mood_for_N._/_V-ing-phraseCloze",
       "unit": 4,
       "type": "phraseCloze",
-      "sentence": "______ a movie tonight; let's go for a walk instead.",
+      "sentence": "______ watching a movie tonight; let's go for a walk instead.",
       "translation": "我今晚沒心情看電影，我們去散步吧。",
-      "correct_answer": "I'm not in the mood for watching",
+      "correct_answer": "I'm not in the mood for",
       "options": []
     },
     {
       "id": "U4-P-be_in_the_mood_for_N._/_V-ing-phraseClozeTransfer",
       "unit": 4,
       "type": "phraseClozeTransfer",
-      "sentence": "I ______ Italian food tonight.",
+      "sentence": "I ______ some Italian food tonight.",
       "translation": "我今晚想吃點義大利菜。",
-      "correct_answer": "am in the mood for some",
+      "correct_answer": "am in the mood for",
       "options": []
     },
     {
@@ -2490,18 +2490,18 @@ window.questionsData = {
       "id": "U5-P-devote_oneself_to_N._/_V-ing-phraseCloze",
       "unit": 5,
       "type": "phraseCloze",
-      "sentence": "Lisa ______ her cooking skills by practicing every day.",
+      "sentence": "Lisa ______ improving her cooking skills by practicing every day.",
       "translation": "莉莎每天練習，致力於提升自己的烹飪技能。",
-      "correct_answer": "devoted herself to improving",
+      "correct_answer": "devoted herself to",
       "options": []
     },
     {
       "id": "U5-P-devote_oneself_to_N._/_V-ing-phraseClozeTransfer",
       "unit": 5,
       "type": "phraseClozeTransfer",
-      "sentence": "The scientist ______ a cure for the rare disease.",
+      "sentence": "The scientist ______ finding a cure for the rare disease.",
       "translation": "這位科學家致力於尋找這種罕見疾病的治療方法。",
-      "correct_answer": "devoted himself to finding",
+      "correct_answer": "devoted himself to",
       "options": []
     },
     {
@@ -2526,18 +2526,18 @@ window.questionsData = {
       "id": "U5-P-hang_up_sth-phraseCloze",
       "unit": 5,
       "type": "phraseCloze",
-      "sentence": "At age 40, the veteran boxer finally ______ gloves.",
+      "sentence": "At age 40, the veteran boxer finally ______ his gloves.",
       "translation": "這名資深拳擊手在四十歲時終於退役了。",
-      "correct_answer": "hung up his",
+      "correct_answer": "hung up",
       "options": []
     },
     {
       "id": "U5-P-hang_up_sth-phraseClozeTransfer",
       "unit": 5,
       "type": "phraseClozeTransfer",
-      "sentence": "Please ______ coat in the closet near the entrance.",
+      "sentence": "Please ______ your coat in the closet near the entrance.",
       "translation": "請將你的外套掛在入口處附近的衣櫃裡。",
-      "correct_answer": "hang up your",
+      "correct_answer": "hang up",
       "options": []
     },
     {
@@ -2836,36 +2836,36 @@ window.questionsData = {
       "id": "U6-P-set_the_stage_for_sth-phraseCloze",
       "unit": 6,
       "type": "phraseCloze",
-      "sentence": "By improving public transport, the city hopes to ______ growth.",
+      "sentence": "By improving public transport, the city hopes to ______ sustainable growth.",
       "translation": "透過改善大眾運輸，這座城市希望為永續發展奠定基礎。",
-      "correct_answer": "set the stage for sustainable",
+      "correct_answer": "set the stage for",
       "options": []
     },
     {
       "id": "U6-P-set_the_stage_for_sth-phraseClozeTransfer",
       "unit": 6,
       "type": "phraseClozeTransfer",
-      "sentence": "The peace talks ______ between the two nations.",
+      "sentence": "The peace talks ______ cooperation between the two nations.",
       "translation": "和平會談為兩國之間的合作奠定了基礎。",
-      "correct_answer": "set the stage for cooperation",
+      "correct_answer": "set the stage for",
       "options": []
     },
     {
       "id": "U6-P-to_such_an_extent_that_+_S._+_V.-phraseCloze",
       "unit": 6,
       "type": "phraseCloze",
-      "sentence": "The storm became stronger ______ were canceled.",
+      "sentence": "The storm became stronger ______ flights were canceled.",
       "translation": "暴風雨變得如此強烈，以致於航班都取消了。",
-      "correct_answer": "to such an extent that flights",
+      "correct_answer": "to such an extent that",
       "options": []
     },
     {
       "id": "U6-P-to_such_an_extent_that_+_S._+_V.-phraseClozeTransfer",
       "unit": 6,
       "type": "phraseClozeTransfer",
-      "sentence": "The noise outside disturbed him ______ couldn't sleep.",
+      "sentence": "The noise outside disturbed him ______ he couldn't sleep.",
       "translation": "外面的噪音干擾他到了無法入睡的地步。",
-      "correct_answer": "to such an extent that he",
+      "correct_answer": "to such an extent that",
       "options": []
     },
     {
@@ -3908,18 +3908,18 @@ window.questionsData = {
       "id": "U8-P-set_out_to_V.-phraseCloze",
       "unit": 8,
       "type": "phraseCloze",
-      "sentence": "The organization ______ plastic waste in coastal communities.",
+      "sentence": "The organization ______ reduce plastic waste in coastal communities.",
       "translation": "這個組織致力於減少沿海社區的塑膠垃圾。",
-      "correct_answer": "set out to reduce",
+      "correct_answer": "set out to",
       "options": []
     },
     {
       "id": "U8-P-set_out_to_V.-phraseClozeTransfer",
       "unit": 8,
       "type": "phraseClozeTransfer",
-      "sentence": "They ______ the tallest tower in the region.",
+      "sentence": "They ______ build the tallest tower in the region.",
       "translation": "他們著手建造該地區最高的塔。",
-      "correct_answer": "set out to build",
+      "correct_answer": "set out to",
       "options": []
     },
     {
@@ -4872,18 +4872,18 @@ window.questionsData = {
       "id": "U11-P-find_one's_way_into/to_N.-phraseCloze",
       "unit": 11,
       "type": "phraseCloze",
-      "sentence": "Over time, his ideas ______ final design of the system.",
+      "sentence": "Over time, his ideas ______ the final design of the system.",
       "translation": "隨著時間推移，他的想法逐漸融入此系統的最終設計之中。",
-      "correct_answer": "found their way into the",
+      "correct_answer": "found their way into",
       "options": []
     },
     {
       "id": "U11-P-find_one's_way_into/to_N.-phraseClozeTransfer",
       "unit": 11,
       "type": "phraseClozeTransfer",
-      "sentence": "These plastic wastes eventually ______ oceans.",
+      "sentence": "These plastic wastes eventually ______ the oceans.",
       "translation": "這些塑膠垃圾最終流入了海洋。",
-      "correct_answer": "find their way into the",
+      "correct_answer": "find their way into",
       "options": []
     },
     {
@@ -4908,36 +4908,36 @@ window.questionsData = {
       "id": "U11-P-in_the_event_of_N.-phraseCloze",
       "unit": 11,
       "type": "phraseCloze",
-      "sentence": "______ emergency, please follow the instructions given by the staff.",
+      "sentence": "______ an emergency, please follow the instructions given by the staff.",
       "translation": "如遇緊急情況，請依照工作人員的指示行動。",
-      "correct_answer": "In the event of an",
+      "correct_answer": "In the event of",
       "options": []
     },
     {
       "id": "U11-P-in_the_event_of_N.-phraseClozeTransfer",
       "unit": 11,
       "type": "phraseClozeTransfer",
-      "sentence": "______ earthquake, please hide under a sturdy desk.",
+      "sentence": "______ an earthquake, please hide under a sturdy desk.",
       "translation": "如果發生地震，請躲在堅固的書桌下。",
-      "correct_answer": "In the event of an",
+      "correct_answer": "In the event of",
       "options": []
     },
     {
       "id": "U11-P-spare_sb/sth_from_N./V-ing-phraseCloze",
       "unit": 11,
       "type": "phraseCloze",
-      "sentence": "Wearing a helmet can ______ injuries.",
+      "sentence": "Wearing a helmet can ______ serious injuries.",
       "translation": "戴安全帽可以讓自行車騎士免於受到嚴重傷害。",
-      "correct_answer": "spare cyclists from serious",
+      "correct_answer": "spare cyclists from",
       "options": []
     },
     {
       "id": "U11-P-spare_sb/sth_from_N./V-ing-phraseClozeTransfer",
       "unit": 11,
       "type": "phraseClozeTransfer",
-      "sentence": "The tree canopy ______ heavy rain.",
+      "sentence": "The tree canopy ______ the heavy rain.",
       "translation": "樹冠使我們免受大雨的淋濕。",
-      "correct_answer": "spared us from the",
+      "correct_answer": "spared us from",
       "options": []
     },
     {
@@ -5236,36 +5236,36 @@ window.questionsData = {
       "id": "U12-P-capture_/_catch_the_imagination_of_sb-phraseCloze",
       "unit": 12,
       "type": "phraseCloze",
-      "sentence": "The director's films never fail to ______.",
+      "sentence": "The director's films never fail to ______ audiences.",
       "translation": "這位導演的電影總是能深深吸引觀眾。",
-      "correct_answer": "capture the imagination of audiences",
+      "correct_answer": "capture the imagination of",
       "options": []
     },
     {
       "id": "U12-P-capture_/_catch_the_imagination_of_sb-phraseClozeTransfer",
       "unit": 12,
       "type": "phraseClozeTransfer",
-      "sentence": "The sci-fi novel ______ worldwide.",
+      "sentence": "The sci-fi novel ______ readers worldwide.",
       "translation": "這部科幻小說激發了全球讀者的想像力。",
-      "correct_answer": "captured the imagination of readers",
+      "correct_answer": "captured the imagination of",
       "options": []
     },
     {
       "id": "U12-P-Legend_has_it_that_+_S._+_V.-phraseCloze",
       "unit": 12,
       "type": "phraseCloze",
-      "sentence": "______ treasure of gold and jewels is hidden somewhere inside the old castle.",
+      "sentence": "______ a treasure of gold and jewels is hidden somewhere inside the old castle.",
       "translation": "傳說在這座古堡裡的某個地方藏著一批金銀珠寶。",
-      "correct_answer": "Legend has it that a",
+      "correct_answer": "Legend has it that",
       "options": []
     },
     {
       "id": "U12-P-Legend_has_it_that_+_S._+_V.-phraseClozeTransfer",
       "unit": 12,
       "type": "phraseClozeTransfer",
-      "sentence": "______ treasure is hidden deep inside this mountain.",
+      "sentence": "______ a treasure is hidden deep inside this mountain.",
       "translation": "傳說這座山深處藏有寶藏。",
-      "correct_answer": "Legend has it that a",
+      "correct_answer": "Legend has it that",
       "options": []
     },
     {
@@ -5464,18 +5464,18 @@ window.questionsData = {
       "id": "U13-P-spare_a_thought_for_N.-phraseCloze",
       "unit": 13,
       "type": "phraseCloze",
-      "sentence": "As you enjoy your meal, ______ farmers who worked hard to grow the food.",
+      "sentence": "As you enjoy your meal, ______ the farmers who worked hard to grow the food.",
       "translation": "在你享用餐點時，也請想一想那些辛苦耕種食物的農民。",
-      "correct_answer": "spare a thought for the",
+      "correct_answer": "spare a thought for",
       "options": []
     },
     {
       "id": "U13-P-spare_a_thought_for_N.-phraseClozeTransfer",
       "unit": 13,
       "type": "phraseClozeTransfer",
-      "sentence": "As you throw away leftover food, ______ who are starving.",
+      "sentence": "As you throw away leftover food, ______ those who are starving.",
       "translation": "當你扔掉剩菜時，也請想一想那些正在挨餓的人。",
-      "correct_answer": "spare a thought for those",
+      "correct_answer": "spare a thought for",
       "options": []
     },
     {
@@ -6176,18 +6176,18 @@ window.questionsData = {
       "id": "U14-P-give_rise_to_N.-phraseCloze",
       "unit": 14,
       "type": "phraseCloze",
-      "sentence": "The invention of the Internet ______ new industries.",
+      "sentence": "The invention of the Internet ______ entirely new industries.",
       "translation": "網際網路的發明帶來了全新的產業。",
-      "correct_answer": "gave rise to entirely",
+      "correct_answer": "gave rise to",
       "options": []
     },
     {
       "id": "U14-P-give_rise_to_N.-phraseClozeTransfer",
       "unit": 14,
       "type": "phraseClozeTransfer",
-      "sentence": "The economic crisis ______ unemployment rates.",
+      "sentence": "The economic crisis ______ high unemployment rates.",
       "translation": "經濟危機導致了高失業率。",
-      "correct_answer": "gave rise to high",
+      "correct_answer": "gave rise to",
       "options": []
     },
     {
@@ -6212,18 +6212,18 @@ window.questionsData = {
       "id": "U14-P-make_one's_way_back_to_N.-phraseCloze",
       "unit": 14,
       "type": "phraseCloze",
-      "sentence": "After the meeting, she ______ office to finish some work.",
+      "sentence": "After the meeting, she ______ her office to finish some work.",
       "translation": "會議結束後，她回到辦公室把一些工作完成。",
-      "correct_answer": "made her way back to her",
+      "correct_answer": "made her way back to",
       "options": []
     },
     {
       "id": "U14-P-make_one's_way_back_to_N.-phraseClozeTransfer",
       "unit": 14,
       "type": "phraseClozeTransfer",
-      "sentence": "The hikers managed to ______ camp before sunset.",
+      "sentence": "The hikers managed to ______ the camp before sunset.",
       "translation": "健行者成功在日落前返回了營地。",
-      "correct_answer": "make their way back to the",
+      "correct_answer": "make their way back to",
       "options": []
     },
     {
@@ -6888,18 +6888,18 @@ window.questionsData = {
       "id": "U15-P-lay_the_foundation_for/of_N.-phraseCloze",
       "unit": 15,
       "type": "phraseCloze",
-      "sentence": "Years of training ______ successful career as a musician.",
+      "sentence": "Years of training ______ her successful career as a musician.",
       "translation": "多年的訓練為她成為成功音樂家的職涯奠定了基礎。",
-      "correct_answer": "laid the foundation for her",
+      "correct_answer": "laid the foundation for",
       "options": []
     },
     {
       "id": "U15-P-lay_the_foundation_for/of_N.-phraseClozeTransfer",
       "unit": 15,
       "type": "phraseClozeTransfer",
-      "sentence": "Good reading habits in childhood ______ academic success.",
+      "sentence": "Good reading habits in childhood ______ future academic success.",
       "translation": "童年良好的閱讀習慣為未來的學業成功奠定了基礎。",
-      "correct_answer": "lay the foundation for future",
+      "correct_answer": "lay the foundation for",
       "options": []
     },
     {
@@ -6960,36 +6960,36 @@ window.questionsData = {
       "id": "U15-P-stumble_across/on/upon_N.-phraseCloze",
       "unit": 15,
       "type": "phraseCloze",
-      "sentence": "While hiking through the forest, they ______ old abandoned cabin.",
+      "sentence": "While hiking through the forest, they ______ an old abandoned cabin.",
       "translation": "他們在森林健行時，偶然發現了一間廢棄的木屋。",
-      "correct_answer": "stumbled upon an",
+      "correct_answer": "stumbled upon",
       "options": []
     },
     {
       "id": "U15-P-stumble_across/on/upon_N.-phraseClozeTransfer",
       "unit": 15,
       "type": "phraseClozeTransfer",
-      "sentence": "She ______ old photo album while cleaning the attic.",
+      "sentence": "She ______ an old photo album while cleaning the attic.",
       "translation": "她在清理閣樓時偶然發現了一本舊相簿。",
-      "correct_answer": "stumbled across an",
+      "correct_answer": "stumbled across",
       "options": []
     },
     {
       "id": "U15-P-in_pursuit_of_N.-phraseCloze",
       "unit": 15,
       "type": "phraseCloze",
-      "sentence": "Sharon moved to the city ______ dream of becoming a professional dancer.",
+      "sentence": "Sharon moved to the city ______ her dream of becoming a professional dancer.",
       "translation": "雪倫為了追求成為職業舞者的夢想而搬到城市生活。",
-      "correct_answer": "in pursuit of her",
+      "correct_answer": "in pursuit of",
       "options": []
     },
     {
       "id": "U15-P-in_pursuit_of_N.-phraseClozeTransfer",
       "unit": 15,
       "type": "phraseClozeTransfer",
-      "sentence": "He moved to Paris ______ dream of becoming an artist.",
+      "sentence": "He moved to Paris ______ his dream of becoming an artist.",
       "translation": "他移居巴黎以追求成為藝術家的夢想。",
-      "correct_answer": "in pursuit of his",
+      "correct_answer": "in pursuit of",
       "options": []
     },
     {
@@ -7238,36 +7238,36 @@ window.questionsData = {
       "id": "U16-P-strip_sb/sth_of_sth-phraseCloze",
       "unit": 16,
       "type": "phraseCloze",
-      "sentence": "The constant difficulties at her job have ______ she once found in it.",
+      "sentence": "The constant difficulties at her job have ______ purpose she once found in it.",
       "translation": "工作中接踵而來的困難，消磨殆盡了泰莎曾在其中感受到的使命感。",
-      "correct_answer": "stripped Tessa of the sense of purpose",
+      "correct_answer": "stripped Tessa of the sense of",
       "options": []
     },
     {
       "id": "U16-P-strip_sb/sth_of_sth-phraseClozeTransfer",
       "unit": 16,
       "type": "phraseClozeTransfer",
-      "sentence": "The athlete was ______ gold medal after failing the drug test.",
+      "sentence": "The athlete was ______ his gold medal after failing the drug test.",
       "translation": "該運動員因未通過藥檢而被剝奪了金牌。",
-      "correct_answer": "stripped of his",
+      "correct_answer": "stripped of",
       "options": []
     },
     {
       "id": "U16-P-be_rooted_in_N.-phraseCloze",
       "unit": 16,
       "type": "phraseCloze",
-      "sentence": "Mr. York's passion for helping others ______ experiences of growing up in a small, supportive community.",
+      "sentence": "Mr. York's passion for helping others ______ his experiences of growing up in a small, supportive community.",
       "translation": "約克先生對助人的熱忱深植於他在一個溫暖互助的小社區中成長的經歷。",
-      "correct_answer": "is rooted in his",
+      "correct_answer": "is rooted in",
       "options": []
     },
     {
       "id": "U16-P-be_rooted_in_N.-phraseClozeTransfer",
       "unit": 16,
       "type": "phraseClozeTransfer",
-      "sentence": "His lack of confidence ______ past failures.",
+      "sentence": "His lack of confidence ______ his past failures.",
       "translation": "他缺乏自信深植於他過去的失敗之中。",
-      "correct_answer": "is deeply rooted in his",
+      "correct_answer": "is deeply rooted in",
       "options": []
     }
   ],
@@ -8425,7 +8425,7 @@ window.questionsData = {
       "unit": 14
     },
     {
-      "phrase": "feed off on",
+      "phrase": "feed off",
       "unit": 14
     },
     {
@@ -8441,7 +8441,7 @@ window.questionsData = {
       "unit": 14
     },
     {
-      "phrase": "run go deep",
+      "phrase": "run deep",
       "unit": 15
     },
     {

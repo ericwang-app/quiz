@@ -1035,28 +1035,28 @@
       
       // 3. Check plurals / third person (s/es/ies)
       if (inflectedLower.endsWith('s') && !baseLower.endsWith('s')) {
-        if (baseLower.endsWith('y') && inflectedLower.endsWith('ies')) {
-          let t = target;
-          if (t.endsWith('y')) {
-            t = t.slice(0, -1) + 'ies';
-          } else {
-            t = t + 's';
-          }
-          return matchCase(target, t);
+        let t = target;
+        if (t.endsWith('s')) {
+          if (t === 'species' || t === 'series' || t === 'means') return matchCase(target, t);
+          return matchCase(target, t + 'es');
         }
-        
-        if (inflectedLower.endsWith('es') && !baseLower.endsWith('es')) {
-          let t = target;
-          if (t.endsWith('e')) {
-            return matchCase(target, t + 's');
+        if (t.endsWith('y')) {
+          const vowels = 'aeiou';
+          const preY = t.length >= 2 ? t[t.length - 2] : '';
+          if (!vowels.includes(preY)) {
+            return matchCase(target, t.slice(0, -1) + 'ies');
           }
-          if (t.endsWith('s') || t.endsWith('x') || t.endsWith('ch') || t.endsWith('sh')) {
-            return matchCase(target, t + 'es');
-          }
-          return matchCase(target, t + 's');
         }
-        
-        return matchCase(target, target + 's');
+        if (t.endsWith('ch') || t.endsWith('sh') || t.endsWith('x') || t.endsWith('z')) {
+          return matchCase(target, t + 'es');
+        }
+        if (t.endsWith('fe')) {
+          return matchCase(target, t.slice(0, -2) + 'ves');
+        }
+        if (t.endsWith('f') && t !== 'chief' && t !== 'roof') {
+          return matchCase(target, t.slice(0, -1) + 'ves');
+        }
+        return matchCase(target, t + 's');
       }
       
       return target;
@@ -1098,13 +1098,13 @@
       needed = 3 - chosen.length;
       if (needed > 0) chosen.push(...draw(unselectedSamePos, needed));
       
-      // 6. Fallback: If still need more, draw from same unit other POS based on sameUnitQuota
+      // 6. Fallback: If still need more, draw from same unit other POS
       needed = 3 - chosen.length;
-      if (needed > 0) chosen.push(...draw(sameUnitOtherPos, sameUnitQuota));
+      if (needed > 0) chosen.push(...draw(sameUnitOtherPos, needed));
       
-      // 7. Fallback: If still need more, draw from other selected other POS based on otherSelectedQuota
+      // 7. Fallback: If still need more, draw from other selected other POS
       needed = 3 - chosen.length;
-      if (needed > 0) chosen.push(...draw(otherSelectedOtherPos, otherSelectedQuota));
+      if (needed > 0) chosen.push(...draw(otherSelectedOtherPos, needed));
       
       // 8. Fallback: If still need more, draw remaining from otherSelectedOtherPos
       needed = 3 - chosen.length;
