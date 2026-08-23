@@ -1339,6 +1339,9 @@
       const vocabTranslationQuestions = selectedQuestions.filter(q => q.type === 'vocabTranslation');
       const clozeQuestions = selectedQuestions.filter(q => q.type !== 'vocabTranslation');
 
+      // Track part ranges for answer key
+      window.examPartRanges = [];
+
       // 1. Render Part I: Vocab Translation (單字中翻英)
       if (vocabTranslationQuestions.length > 0) {
         const part1Header = document.createElement('h3');
@@ -1390,8 +1393,25 @@
         paperBody.appendChild(gridContainer);
       }
 
+      // If only vocabTranslation (no cloze questions), record Part I range here
+      if (vocabTranslationQuestions.length > 0 && clozeQuestions.length === 0) {
+        const p1Start = selectedQuestions.indexOf(vocabTranslationQuestions[0]) + 1;
+        const p1End = selectedQuestions.indexOf(vocabTranslationQuestions[vocabTranslationQuestions.length - 1]) + 1;
+        window.examPartRanges.push({ label: 'I', title: '字彙中翻英', start: p1Start, end: p1End });
+      }
       // 2. Render Part II: Cloze test (克漏字選擇)
       if (clozeQuestions.length > 0) {
+        // Record Part I range if vocabTranslation exists
+        if (vocabTranslationQuestions.length > 0) {
+          const p1Start = selectedQuestions.indexOf(vocabTranslationQuestions[0]) + 1;
+          const p1End = selectedQuestions.indexOf(vocabTranslationQuestions[vocabTranslationQuestions.length - 1]) + 1;
+          window.examPartRanges.push({ label: 'I', title: '字彙中翻英', start: p1Start, end: p1End });
+        }
+        const p2Start = selectedQuestions.indexOf(clozeQuestions[0]) + 1;
+        const p2End = selectedQuestions.indexOf(clozeQuestions[clozeQuestions.length - 1]) + 1;
+        const p2Label = vocabTranslationQuestions.length > 0 ? 'II' : 'I';
+        window.examPartRanges.push({ label: p2Label, title: '克漏字與搭配詞選擇', start: p2Start, end: p2End });
+
         const part2Header = document.createElement('h3');
         part2Header.className = 'part-header';
         part2Header.style.fontSize = '1.05rem';
@@ -1506,16 +1526,50 @@
       transList.innerHTML = '';
 
       const letters = ['A', 'B', 'C', 'D'];
-      let tableHtml = '';
       const chunkSize = 10;
-      
+      const parts = window.examPartRanges || [];
+
+      // Helper: get part label for a 1-based question index
+      function getPartLabel(idx1based) {
+        for (const p of parts) {
+          if (idx1based >= p.start && idx1based <= p.end) return p;
+        }
+        return null;
+      }
+
+      let tableHtml = '';
+      let lastPartLabel = null;
+
       for (let i = 0; i < selectedQuestions.length; i += chunkSize) {
         const chunk = selectedQuestions.slice(i, i + chunkSize);
+        
+        // Check if this chunk crosses a part boundary - insert part header row if needed
+        const firstIdx = i + 1;
+        const part = getPartLabel(firstIdx);
+        if (part && part.label !== lastPartLabel) {
+          lastPartLabel = part.label;
+          tableHtml += `<tr><td colspan="${chunkSize}" style="background:#f1f5f9; font-weight:700; text-align:left; padding: 0.4rem 0.5rem; font-size:0.85rem; border:1px solid #000;">${part.label}. ${part.title}（第 ${part.start}～${part.end} 題）</td></tr>`;
+        }
+
         let headerRow = '<tr>';
         let answerRow = '<tr>';
         
         chunk.forEach((q, cIdx) => {
           const idx = i + cIdx;
+          const qNum = idx + 1;
+          // Check mid-chunk part boundary
+          const midPart = getPartLabel(qNum);
+          if (midPart && midPart.label !== lastPartLabel) {
+            // Close current rows and insert header
+            headerRow += '</tr>';
+            answerRow += '</tr>';
+            tableHtml += headerRow + answerRow;
+            tableHtml += `<tr><td colspan="${chunkSize}" style="background:#f1f5f9; font-weight:700; text-align:left; padding: 0.4rem 0.5rem; font-size:0.85rem; border:1px solid #000;">${midPart.label}. ${midPart.title}（第 ${midPart.start}～${midPart.end} 題）</td></tr>`;
+            lastPartLabel = midPart.label;
+            headerRow = '<tr>';
+            answerRow = '<tr>';
+          }
+
           let correctValue = '';
           if (q.type === 'vocabTranslation') {
             correctValue = q.correct_answer;
@@ -1524,7 +1578,7 @@
             correctValue = letters[correctLetterIdx] || '';
           }
           
-          headerRow += `<th>${idx + 1}</th>`;
+          headerRow += `<th>${qNum}</th>`;
           answerRow += `<td><strong>${correctValue}</strong></td>`;
         });
         
@@ -1535,10 +1589,23 @@
       
       table.innerHTML = tableHtml;
 
-      // Populate translations for cloze/clozeTransfer/phraseCloze/phraseClozeTransfer questions
+      // Populate translations
       let transCount = 0;
+      let lastTransPartLabel = null;
       selectedQuestions.forEach((q, idx) => {
         if ((q.type === 'cloze' || q.type === 'clozeTransfer' || q.type === 'phraseCloze' || q.type === 'phraseClozeTransfer') && q.translation) {
+          const qNum = idx + 1;
+          const part = getPartLabel(qNum);
+          
+          // Insert section header when part changes
+          if (part && part.label !== lastTransPartLabel) {
+            lastTransPartLabel = part.label;
+            const sectionHeader = document.createElement('div');
+            sectionHeader.style.cssText = 'font-weight:700; font-size:0.95rem; margin-top:1rem; margin-bottom:0.4rem; border-bottom:1.5px solid #000; padding-bottom:0.2rem;';
+            sectionHeader.textContent = `${part.label}. ${part.title}（第 ${part.start}～${part.end} 題）`;
+            transList.appendChild(sectionHeader);
+          }
+
           transCount++;
           const item = document.createElement('div');
           item.className = 'translation-item';
@@ -1550,7 +1617,7 @@
           else if (q.type === 'phraseClozeTransfer') typeLabel = '片語應用';
 
           item.innerHTML = `
-            <strong>第 ${idx + 1} 題例句對照 (${typeLabel})：</strong><br>
+            <strong>第 ${qNum} 題例句 (${typeLabel})：</strong><br>
             ${q.sentence.replace('______', '<u>' + q.correct_answer + '</u>')}<br>
             <span style="color: var(--text-muted);">${q.translation}</span>
           `;
