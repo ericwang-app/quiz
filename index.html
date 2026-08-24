@@ -155,6 +155,7 @@
     }
 
     .card-quiz::before { background: linear-gradient(90deg, #6366f1, #818cf8); }
+    .card-vocab::before { background: linear-gradient(90deg, #f59e0b, #f43f5e); }
     .card-exam::before { background: linear-gradient(90deg, #14b8a6, #2dd4bf); }
 
     .portal-card:hover {
@@ -165,6 +166,10 @@
 
     .card-quiz:hover {
       box-shadow: 0 20px 40px var(--primary-glow);
+    }
+
+    .card-vocab:hover {
+      box-shadow: 0 20px 40px rgba(245, 158, 11, 0.35);
     }
 
     .card-exam:hover {
@@ -188,6 +193,12 @@
       color: var(--primary);
     }
 
+    .card-vocab .icon-wrapper {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+    }
+
     .card-exam .icon-wrapper {
       background: rgba(20, 184, 166, 0.15);
       border: 1px solid rgba(20, 184, 166, 0.2);
@@ -202,6 +213,12 @@
       background: var(--primary);
       color: #ffffff;
       box-shadow: 0 0 20px var(--primary);
+    }
+
+    .card-vocab:hover .icon-wrapper {
+      background: #f59e0b;
+      color: #ffffff;
+      box-shadow: 0 0 20px #f59e0b;
     }
 
     .card-exam:hover .icon-wrapper {
@@ -219,6 +236,7 @@
     }
 
     .card-quiz:hover .card-title { color: #c7d2fe; }
+    .card-vocab:hover .card-title { color: #fde68a; }
     .card-exam:hover .card-title { color: #99f6e4; }
 
     .card-desc {
@@ -240,6 +258,7 @@
     }
 
     .card-quiz .card-action { color: #a5b4fc; }
+    .card-vocab .card-action { color: #fcd34d; }
     .card-exam .card-action { color: #2dd4bf; }
 
     .portal-card:hover .card-action {
@@ -327,7 +346,27 @@
         </span>
       </a>
 
-      <!-- Card 2: Exam generator sheet -->
+      <!-- Card 2: 9-Choice Vocabulary Grid Quiz -->
+      <a href="vocab_quiz.html" class="portal-card card-vocab">
+        <div class="icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="7" height="7" x="3" y="3" rx="1"/>
+            <rect width="7" height="7" x="14" y="3" rx="1"/>
+            <rect width="7" height="7" x="3" y="14" rx="1"/>
+            <rect width="7" height="7" x="14" y="14" rx="1"/>
+          </svg>
+        </div>
+        <h2 class="card-title">九宮格單字極速測驗</h2>
+        <p class="card-desc">全新 9 選 1 矩陣測驗！中翻英選單字、英翻中選釋義，支援鍵盤 1~9 秒速作答、語音朗讀與完整戰報記錄。</p>
+        <span class="card-action">
+          進入極速測驗 (9選1)
+          <svg class="arrow-icon" viewBox="0 0 24 24">
+            <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+
+      <!-- Card 3: Exam generator sheet -->
       <a href="exam_generator.html" class="portal-card card-exam">
         <div class="icon-wrapper">
           <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
