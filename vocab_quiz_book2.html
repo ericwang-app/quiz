@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>單字書 - 九宮格單字極速測驗 (9選1) - 英文學習系統</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --bg-body: #0b0f19;
+      --bg-surface: #131b2e;
+      --bg-card: rgba(26, 36, 60, 0.7);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(99, 102, 241, 0.5);
+      
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-light: rgba(99, 102, 241, 0.15);
+      --primary-glow: rgba(99, 102, 241, 0.35);
+      
+      --secondary: #14b8a6;
+      --secondary-hover: #0d9488;
+      --secondary-light: rgba(20, 184, 166, 0.15);
+      
+      --accent: #f43f5e;
+      --accent-hover: #e11d48;
+      --accent-light: rgba(244, 63, 94, 0.15);
+      
+      --success: #10b981;
+      --success-light: rgba(16, 185, 129, 0.18);
+      --success-glow: rgba(16, 185, 129, 0.35);
+      
+      --warning: #f59e0b;
+      --warning-light: rgba(245, 158, 11, 0.15);
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-light: #64748b;
+      
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+      --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+      --shadow-lg: 0 20px 35px -10px rgba(0, 0, 0, 0.5);
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(20, 184, 166, 0.1) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(244, 63, 94, 0.05) 0px, transparent 60%);
+      background-attachment: fixed;
+    }
+
+    /* Ambient Header */
+    header {
+      background: rgba(19, 27, 46, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .logo-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+      font-size: 1.2rem;
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(to right, #ffffff, #c7d2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: var(--transition);
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .nav-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1100px;
+      width: 100%;
+      margin: 1.5rem auto 3rem;
+      padding: 0 1.25rem;
+      flex: 1;
+    }
+
+    /* Screen Transition */
+    .view-screen {
+      display: none;
+      animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .view-screen.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Card Panels */
+    .glass-panel {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Setup Screen Styles */
+    .hero-banner {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .hero-banner h1 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #2dd4bf 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-banner p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .config-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .config-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #c7d2fe;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Option Pill Groups */
+    .pill-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .pill-option {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1.5px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.65rem 0.5rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.2rem;
+    }
+
+    .pill-option:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .pill-option.active {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: #c7d2fe;
+      box-shadow: 0 0 12px var(--primary-glow);
+    }
+
+    /* Unit Selection Grid */
+    .unit-selector-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 0.5rem;
+      max-height: 240px;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+
+    .unit-selector-grid::-webkit-scrollbar {
+      width: 6px;
+    }
+    .unit-selector-grid::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+
+    .unit-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 0.25rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+    }
+
+    .unit-pill:hover {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .unit-pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      box-shadow: 0 0 10px var(--primary-glow);
+    }
+
+    .unit-controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .text-link-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.82rem;
+      padding: 0 0.25rem;
+      transition: var(--transition);
+    }
+    .text-link-btn:hover {
+      color: #a5b4fc;
+      text-decoration: underline;
+    }
+
+    /* Start Button */
+    .btn-start-quiz {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 1.1rem;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      box-shadow: 0 10px 25px -5px var(--primary-glow);
+    }
+
+    .btn-start-quiz:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px -5px var(--primary-glow);
+      filter: brightness(1.1);
+    }
+
+    /* ---------------------------------------------------- */
+    /* PLAY SCREEN STYLING                                  */
+    /* ---------------------------------------------------- */
+    .hud-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      background: rgba(19, 27, 46, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 0.8rem 1.5rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .hud-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .hud-badge {
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 0.9rem;
+    }
+
+    .streak-tag {
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      color: white;
+      padding: 0.25rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      animation: pulse 1.5s infinite;
+      display: none;
+    }
+
+    /* Progress bar */
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      width: 0%;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 10px var(--primary-glow);
+    }
+
+    /* Timer countdown bar */
+    .timer-bar-container {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+
+    .timer-bar-fill {
+      height: 100%;
+      background: var(--warning);
+      width: 100%;
+      transition: width 0.1s linear, background-color 0.3s ease;
+    }
+
+    /* Question Display Card */
+    .question-hero-card {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      padding: 2.2rem 2rem;
+      text-align: center;
+      margin-bottom: 1.8rem;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .question-hero-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+
+    .q-type-pill {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #c7d2fe;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    .q-main-text {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.6rem;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .q-sub-text {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+    }
+
+    .pronounce-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--text-main);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .pronounce-btn:hover {
+      background: var(--primary);
+      color: white;
+      transform: scale(1.1);
+    }
+
+    /* ---------------------------------------------------- */
+    /* 9-CHOICE MATRIX GRID (3x3)                          */
+    /* ---------------------------------------------------- */
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.85rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .matrix-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.65rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .matrix-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .matrix-btn {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1.1rem 1rem;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+      min-height: 72px;
+    }
+
+    .matrix-btn:hover:not(:disabled) {
+      background: rgba(45, 58, 85, 0.9);
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .matrix-btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-key-badge {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+
+    .matrix-btn:hover .btn-key-badge {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .btn-text-content {
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.3;
+      word-break: break-word;
+      flex: 1;
+    }
+
+    /* Answer Feedback States */
+    .matrix-btn.correct {
+      background: var(--success-light) !important;
+      border-color: var(--success) !important;
+      color: #a7f3d0 !important;
+      box-shadow: 0 0 20px var(--success-glow) !important;
+      transform: scale(1.02);
+    }
+    .matrix-btn.correct .btn-key-badge {
+      background: var(--success) !important;
+      color: white !important;
+      border-color: var(--success) !important;
+    }
+
+    .matrix-btn.wrong {
+      background: var(--accent-light) !important;
+      border-color: var(--accent) !important;
+      color: #fecdd3 !important;
+      animation: shake 0.4s ease;
+    }
+    .matrix-btn.wrong .btn-key-badge {
+      background: var(--accent) !important;
+      color: white !important;
+      border-color: var(--accent) !important;
+    }
+
+    .matrix-btn.dimmed {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    /* Explanation Accordion Box */
+    .explanation-drawer {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      margin-top: 1.25rem;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .explanation-drawer.active {
+      display: block;
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .exp-word-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .exp-phonetic {
+      font-family: 'JetBrains Mono', monospace;
+      color: #a5b4fc;
+      font-size: 0.9rem;
+      margin-left: 0.5rem;
+    }
+
+    .exp-definition {
+      font-size: 1rem;
+      color: #2dd4bf;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+    }
+
+    .exp-example-en {
+      font-size: 0.95rem;
+      color: #e2e8f0;
+      margin-bottom: 0.25rem;
+      line-height: 1.4;
+    }
+
+    .exp-example-zh {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .action-bar-play {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+    }
+
+    /* ---------------------------------------------------- */
+    /* REPORT & HISTORY RESULTS SCREEN                      */
+    /* ---------------------------------------------------- */
+    .score-hero-box {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(20, 184, 166, 0.2) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      padding: 2.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .score-grade-badge {
+      display: inline-block;
+      padding: 0.4rem 1.2rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .big-score-display {
+      font-size: 4.5rem;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      font-family: 'JetBrains Mono', sans-serif;
+      background: linear-gradient(to right, #ffffff, #818cf8, #2dd4bf);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stats-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 1rem;
+      max-width: 700px;
+      margin: 1.5rem auto 0;
+    }
+
+    .stat-metric-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.8rem;
+    }
+    .stat-metric-value {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .stat-metric-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* Result Action Buttons */
+    .results-cta-bar {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+
+    .btn-cta {
+      padding: 0.85rem 1.8rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+    }
+
+    .btn-cta-primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 6px 20px var(--primary-glow);
+    }
+    .btn-cta-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-cta-accent {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 6px 20px rgba(244, 63, 94, 0.3);
+    }
+    .btn-cta-accent:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-cta-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+    .btn-cta-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Detailed Answer Review Table / Cards */
+    .section-heading-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .section-heading-row h3 {
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
+
+    .review-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .review-item-card {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      display: grid;
+      grid-template-columns: 40px 1fr auto;
+      gap: 1rem;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .review-item-card.is-correct {
+      border-left: 4px solid var(--success);
+    }
+    .review-item-card.is-wrong {
+      border-left: 4px solid var(--accent);
+      background: rgba(244, 63, 94, 0.05);
+    }
+
+    .review-idx {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    .review-main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .review-term-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .review-term-word {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .review-term-phonetic {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #a5b4fc;
+    }
+
+    .review-term-def {
+      font-size: 0.95rem;
+      color: #2dd4bf;
+      font-weight: 600;
+    }
+
+    .review-user-ans {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .review-badge-status {
+      padding: 0.3rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-status-correct {
+      background: var(--success-light);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .badge-status-wrong {
+      background: var(--accent-light);
+      color: #fb7185;
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+
+    /* History Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-container {
+      background: #131b2e;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      max-width: 650px;
+      width: 100%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .history-card {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.82rem;
+      color: var(--text-light);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header Navigation -->
+  <header>
+    <div class="brand-section">
+      <div class="logo-badge">9</div>
+      <div>
+        <div class="brand-title">九宮格單字極速測驗</div>
+        <div class="brand-subtitle">9-Choice Vocabulary Grid Quiz</div>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <button class="nav-btn" onclick="openHistoryModal()">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        歷史紀錄
+      </button>
+      <a href="quiz.html" class="nav-btn">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        傳統評量模式
+      </a>
+      <a href="index.html" class="nav-btn">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        首頁
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Application Body -->
+  <main>
+
+    <!-- ========================================== -->
+    <!-- 1. SETUP / CONFIGURATION SCREEN            -->
+    <!-- ========================================== -->
+    <section id="setupScreen" class="view-screen active">
+      <div class="hero-banner">
+        <h1>單字書(Unit 11-18) 九宮格測驗</h1>
+        <p>挑戰 9 選 1 快速直覺反應！支援鍵盤 1~9 秒速作答、中英雙向測驗與完整答題戰報統計。</p>
+      </div>
+
+      <div class="config-grid">
+        
+        <!-- Mode Selection -->
+        <div class="config-card">
+          <div class="config-title">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+            出題測驗模式
+          </div>
+          <div class="pill-group">
+            <div class="pill-option active" data-mode="ZH_TO_EN" onclick="selectQuizMode('ZH_TO_EN')">
+              <span>中翻英 (9選1)</span>
+              <small style="color:var(--text-muted); font-size:0.75rem;">看中文選英文單字</small>
+            </div>
+            <div class="pill-option" data-mode="EN_TO_ZH" onclick="selectQuizMode('EN_TO_ZH')">
+              <span>英翻中 (9選1)</span>
+              <small style="color:var(--text-muted); font-size:0.75rem;">看英文選中文釋義</small>
+            </div>
+            <div class="pill-option" data-mode="MIXED" onclick="selectQuizMode('MIXED')">
+              <span>雙向混合模式</span>
+              <small style="color:var(--text-muted); font-size:0.75rem;">隨機交替出現</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question Count & Timer Selection -->
+        <div class="config-card">
+          <div class="config-title">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            題數與時間模式
+          </div>
+          <div style="margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">測驗題數：</div>
+          <div class="pill-group" id="countPillGroup">
+            <div class="pill-option" data-count="10" onclick="selectCount(10)">10 題</div>
+            <div class="pill-option active" data-count="20" onclick="selectCount(20)">20 題</div>
+            <div class="pill-option" data-count="30" onclick="selectCount(30)">30 題</div>
+            <div class="pill-option" data-count="ALL" onclick="selectCount('ALL')">全部單字</div>
+          </div>
+
+          <div style="margin-top: 0.8rem; margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">每題限時：</div>
+          <div class="pill-group" id="timerPillGroup">
+            <div class="pill-option active" data-timer="0" onclick="selectTimer(0)">無限制</div>
+            <div class="pill-option" data-timer="15" onclick="selectTimer(15)">15 秒</div>
+            <div class="pill-option" data-timer="10" onclick="selectTimer(10)">10 秒 (極速)</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Unit Range Selection Card -->
+      <div class="glass-panel" style="padding: 1.5rem;">
+        <div class="unit-controls-bar">
+          <div style="font-weight: 700; color: #c7d2fe; font-size: 1rem; display:flex; align-items:center; gap:0.5rem;">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            選取測驗單元範圍 (<span id="selectedUnitsCount">0</span> 單元選取 / 共 <span id="totalAvailableWordsCount">0</span> 個單字)
+          </div>
+          <div>
+            <button class="text-link-btn" onclick="selectAllUnits()">全選</button>
+            <span style="color:var(--border-color);">|</span>
+            <button class="text-link-btn" onclick="clearAllUnits()">清除</button>
+          </div>
+        </div>
+
+        <div class="unit-selector-grid" id="unitPillsContainer">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Start Button -->
+      <button class="btn-start-quiz" onclick="startQuizSession()">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        開始九宮格極速測驗
+      </button>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 2. QUIZ PLAY SCREEN                        -->
+    <!-- ========================================== -->
+    <section id="playScreen" class="view-screen">
+      
+      <!-- Top HUD Stats -->
+      <div class="hud-bar">
+        <div class="hud-item">
+          <span style="color:var(--text-muted);">題號</span>
+          <span class="hud-badge" id="hudProgress">1 / 20</span>
+        </div>
+
+        <div class="hud-item">
+          <div class="streak-tag" id="streakBadge">🔥 3 連對!</div>
+          <span style="color:var(--text-muted);">得分</span>
+          <span class="hud-badge" id="hudScore" style="color:#34d399;">0</span>
+        </div>
+
+        <div class="hud-item">
+          <button class="nav-btn" style="padding:0.35rem 0.75rem; font-size:0.8rem;" onclick="exitQuizConfirm()">結束測驗</button>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="progressBarFill"></div>
+      </div>
+
+      <!-- Countdown Timer Bar (Optional) -->
+      <div class="timer-bar-container" id="timerBarContainer">
+        <div class="timer-bar-fill" id="timerBarFill"></div>
+      </div>
+
+      <!-- Question Stem Card -->
+      <div class="question-hero-card">
+        <div class="q-type-pill" id="qTypeBadge">中翻英 (請選出正確英文單字)</div>
+        
+        <div class="q-main-text" id="qMainText">
+          <span>短缺；不足</span>
+          <button class="pronounce-btn" id="qPronounceBtn" title="點擊發音" onclick="speakCurrentWord()">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+          </button>
+        </div>
+
+        <div class="q-sub-text" id="qSubText">
+          <span id="qPosText">[n.]</span>
+          <span id="qPhoneticText">/ ˈʃɔrtɪdʒ /</span>
+        </div>
+      </div>
+
+      <!-- 9-Choice Matrix Grid -->
+      <div class="matrix-grid" id="matrixButtonsGrid">
+        <!-- 9 buttons generated dynamically -->
+      </div>
+
+      <!-- Explanation & Word Detail Drawer -->
+      <div class="explanation-drawer" id="explanationDrawer">
+        <div class="exp-header">
+          <div>
+            <span class="exp-word-title" id="expWord">shortage</span>
+            <span class="exp-phonetic" id="expPhonetic">[ˈʃɔrtɪdʒ]</span>
+            <span style="font-size:0.85rem; color:#c7d2fe; margin-left:0.4rem;" id="expPos">(n.)</span>
+          </div>
+          <button class="pronounce-btn" onclick="speakCurrentWord()" style="width:32px; height:32px;">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+          </button>
+        </div>
+        <div class="exp-definition" id="expDef">短缺；不足</div>
+        <div class="exp-example-en" id="expExEn">As a result of a staff shortage, the hospital had to delay operations.</div>
+        <div class="exp-example-zh" id="expExZh">由於人手短缺，醫院不得不延後一些手術。</div>
+      </div>
+
+      <!-- Action Footer (Next Button) -->
+      <div class="action-bar-play">
+        <div style="font-size:0.85rem; color:var(--text-muted);">
+          💡 提示：可按鍵盤數字鍵 <span style="font-family:'JetBrains Mono'; color:#a5b4fc; font-weight:700;">1 ~ 9</span> 快速作答
+        </div>
+        <button id="btnNextQuestion" class="btn-cta btn-cta-primary" style="display:none; padding:0.6rem 1.4rem;" onclick="advanceToNextQuestion()">
+          下一題 ➔
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 3. RESULTS & PERFORMANCE REPORT SCREEN     -->
+    <!-- ========================================== -->
+    <section id="resultsScreen" class="view-screen">
+      
+      <!-- Big Score Hero Box -->
+      <div class="score-hero-box">
+        <div class="score-grade-badge" id="resGradeBadge">🌟 S 級 - 單字大師</div>
+        <div class="big-score-display"><span id="resScoreNum">95</span><span style="font-size:2rem;">%</span></div>
+        <p id="resFeedbackText" style="color:var(--text-muted); font-size:1.05rem;">太厲害了！你對這些單字的直覺反應非常敏銳！</p>
+
+        <div class="stats-summary-grid">
+          <div class="stat-metric-card">
+            <div class="stat-metric-value" id="resCorrectCount" style="color:#34d399;">19</div>
+            <div class="stat-metric-label">答對題數</div>
+          </div>
+          <div class="stat-metric-card">
+            <div class="stat-metric-value" id="resWrongCount" style="color:#fb7185;">1</div>
+            <div class="stat-metric-label">答錯題數</div>
+          </div>
+          <div class="stat-metric-card">
+            <div class="stat-metric-value" id="resMaxStreak" style="color:#fbbf24;">12</div>
+            <div class="stat-metric-label">最高連對</div>
+          </div>
+          <div class="stat-metric-card">
+            <div class="stat-metric-value" id="resAvgTime" style="color:#60a5fa;">2.4s</div>
+            <div class="stat-metric-label">平均答題速度</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="results-cta-bar">
+        <button class="btn-cta btn-cta-primary" onclick="restartWithSameConfig()">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          再來一局
+        </button>
+
+        <button id="btnRetestWrong" class="btn-cta btn-cta-accent" onclick="retestOnlyWrongWords()" style="display:none;">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          專攻錯題重測 (<span id="retestWrongCount">0</span> 題)
+        </button>
+
+        <button class="btn-cta btn-cta-secondary" onclick="backToSetup()">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          重新調整設定
+        </button>
+      </div>
+
+      <!-- Question Review List -->
+      <div class="glass-panel">
+        <div class="section-heading-row">
+          <h3>📝 逐題答題詳細清單</h3>
+          <div style="font-size:0.85rem; color:var(--text-muted);">
+            點擊單字可朗讀發音
+          </div>
+        </div>
+
+        <div class="review-items-list" id="reviewItemsList">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- 4. HISTORY MODAL                           -->
+  <!-- ========================================== -->
+  <div class="modal-overlay" id="historyModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 style="font-weight: 800; font-size: 1.2rem;">📊 歷史測驗紀錄</h3>
+        <button class="pronounce-btn" style="width:32px; height:32px;" onclick="closeHistoryModal()">✕</button>
+      </div>
+      <div class="modal-body" id="historyModalBody">
+        <!-- Populated by JS -->
+      </div>
+      <div style="padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+        <button class="text-link-btn" style="color:var(--accent);" onclick="clearAllHistory()">清空歷史紀錄</button>
+        <button class="nav-btn" onclick="closeHistoryModal()">關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    高中英文學習雜誌與考卷系統 &copy; 2026. Designed for Master-level Vocabulary Acquisition.
+  </footer>
+
+  <!-- Import Quiz Data Database -->
+  <script src="quiz_data_book2.js"></script>
+
+  <script>
+    // --- State Management ---
+    const state = {
+      allVocabList: [],       // All vocabulary objects with unit metadata
+      availableUnits: [],     // Array of unit numbers
+      selectedUnits: [],      // User selected units
+      quizMode: 'ZH_TO_EN',   // 'ZH_TO_EN' | 'EN_TO_ZH' | 'MIXED'
+      questionCount: 20,      // Number or 'ALL'
+      timeLimitPerQuestion: 0,// Seconds (0 = no limit)
+      
+      // Active Quiz Session
+      quizQueue: [],
+      currentIndex: 0,
+      currentQuestion: null,
+      answered: false,
+      score: 0,
+      streak: 0,
+      maxStreak: 0,
+      timerInterval: null,
+      timeLeftMs: 0,
+      startTime: 0,
+      sessionResults: []      // List of { question, userAnswer, isCorrect, timeSpent }
+    };
+
+    // --- Initialization on DOM Load ---
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDatabase();
+      loadSettings();
+      setupKeyboardListeners();
+    });
+
+    function loadDatabase() {
+      if (!window.quizData || !Array.isArray(window.quizData)) {
+        alert("無法載入 quiz_data_book2.js 題庫，請確認檔案路徑正確！");
+        return;
+      }
+
+      state.allVocabList = [];
+      const unitSet = new Set();
+
+      window.quizData.forEach(u => {
+        const uNum = u.unit;
+        unitSet.add(uNum);
+        if (Array.isArray(u.vocabulary)) {
+          u.vocabulary.forEach(v => {
+            if (v.word && v.definition) {
+              state.allVocabList.push({
+                ...v,
+                unit: uNum,
+                unitTitle: u.title || `Unit ${uNum}`
+              });
+            }
+          });
+        }
+      });
+
+      state.availableUnits = Array.from(unitSet).sort((a, b) => a - b);
+      renderUnitPills();
+      updateAvailableWordsCount();
+    }
+
+    function renderUnitPills() {
+      const container = document.getElementById('unitPillsContainer');
+      container.innerHTML = '';
+
+      state.availableUnits.forEach(u => {
+        const pill = document.createElement('div');
+        pill.className = `unit-pill ${state.selectedUnits.includes(u) ? 'active' : ''}`;
+        pill.textContent = `U${u}`;
+        pill.title = `Unit ${u}`;
+        pill.onclick = () => toggleUnitSelection(u, pill);
+        container.appendChild(pill);
+      });
+
+      document.getElementById('selectedUnitsCount').textContent = state.selectedUnits.length;
+    }
+
+    function toggleUnitSelection(unitNum, pillEl) {
+      if (state.selectedUnits.includes(unitNum)) {
+        state.selectedUnits = state.selectedUnits.filter(u => u !== unitNum);
+        pillEl.classList.remove('active');
+      } else {
+        state.selectedUnits.push(unitNum);
+        pillEl.classList.add('active');
+      }
+      document.getElementById('selectedUnitsCount').textContent = state.selectedUnits.length;
+      updateAvailableWordsCount();
+      saveSettings();
+    }
+
+    function selectAllUnits() {
+      state.selectedUnits = [...state.availableUnits];
+      renderUnitPills();
+      updateAvailableWordsCount();
+      saveSettings();
+    }
+
+    function clearAllUnits() {
+      state.selectedUnits = [];
+      renderUnitPills();
+      updateAvailableWordsCount();
+      saveSettings();
+    }
+
+    function updateAvailableWordsCount() {
+      const filtered = state.allVocabList.filter(v => state.selectedUnits.includes(v.unit));
+      document.getElementById('totalAvailableWordsCount').textContent = filtered.length;
+    }
+
+    // --- Mode & Options Selection ---
+    function selectQuizMode(mode) {
+      state.quizMode = mode;
+      document.querySelectorAll('[data-mode]').forEach(el => {
+        el.classList.toggle('active', el.dataset.mode === mode);
+      });
+      saveSettings();
+    }
+
+    function selectCount(count) {
+      state.questionCount = count;
+      document.querySelectorAll('#countPillGroup [data-count]').forEach(el => {
+        el.classList.toggle('active', el.dataset.count === String(count));
+      });
+      saveSettings();
+    }
+
+    function selectTimer(seconds) {
+      state.timeLimitPerQuestion = seconds;
+      document.querySelectorAll('#timerPillGroup [data-timer]').forEach(el => {
+        el.classList.toggle('active', el.dataset.timer === String(seconds));
+      });
+      saveSettings();
+    }
+
+    function saveSettings() {
+      localStorage.setItem('vocab_quiz_mode_book2', state.quizMode);
+      localStorage.setItem('vocab_quiz_count_book2', String(state.questionCount));
+      localStorage.setItem('vocab_quiz_timer_book2', String(state.timeLimitPerQuestion));
+      localStorage.setItem('vocab_quiz_units_book2', JSON.stringify(state.selectedUnits));
+    }
+
+    function loadSettings() {
+      const savedMode = localStorage.getItem('vocab_quiz_mode_book2');
+      if (savedMode) selectQuizMode(savedMode);
+
+      const savedCount = localStorage.getItem('vocab_quiz_count_book2');
+      if (savedCount) selectCount(savedCount === 'ALL' ? 'ALL' : parseInt(savedCount));
+
+      const savedTimer = localStorage.getItem('vocab_quiz_timer_book2');
+      if (savedTimer !== null) selectTimer(parseInt(savedTimer));
+
+      const savedUnits = localStorage.getItem('vocab_quiz_units_book2');
+      if (savedUnits) {
+        try {
+          state.selectedUnits = JSON.parse(savedUnits);
+        } catch(e) {
+          state.selectedUnits = [...state.availableUnits];
+        }
+      } else {
+        state.selectedUnits = [...state.availableUnits]; // Select all by default
+      }
+      renderUnitPills();
+      updateAvailableWordsCount();
+    }
+
+    // --- Start Quiz Session ---
+    function startQuizSession(customWordList = null) {
+      let pool = [];
+
+      if (customWordList && customWordList.length > 0) {
+        pool = [...customWordList];
+      } else {
+        if (state.selectedUnits.length === 0) {
+          alert('請至少勾選一個單元範圍！');
+          return;
+        }
+        pool = state.allVocabList.filter(v => state.selectedUnits.includes(v.unit));
+      }
+
+      if (pool.length === 0) {
+        alert('所選範圍內沒有單字！');
+        return;
+      }
+      if (state.allVocabList.length < 9) {
+        alert('總單字庫少於 9 個，無法進行九宮格測驗！');
+        return;
+      }
+
+      // Shuffle pool
+      const shuffled = [...pool].sort(() => Math.random() - 0.5);
+      const totalQuestions = (state.questionCount === 'ALL' || customWordList) 
+        ? shuffled.length 
+        : Math.min(state.questionCount, shuffled.length);
+
+      const targetWords = shuffled.slice(0, totalQuestions);
+
+      // Build question objects with 9 choices
+      state.quizQueue = targetWords.map(target => {
+        let qType = state.quizMode;
+        if (qType === 'MIXED') {
+          qType = Math.random() > 0.5 ? 'ZH_TO_EN' : 'EN_TO_ZH';
+        }
+
+        // Pick 8 distractors: 80% (6) from selected units, 20% (2) from other units
+        const poolA = state.allVocabList.filter(w => state.selectedUnits.includes(w.unit) && w.word.toLowerCase() !== target.word.toLowerCase());
+        const poolB = state.allVocabList.filter(w => !state.selectedUnits.includes(w.unit) && w.word.toLowerCase() !== target.word.toLowerCase());
+
+        const shuffledA = [...poolA].sort(() => Math.random() - 0.5);
+        const shuffledB = [...poolB].sort(() => Math.random() - 0.5);
+
+        let countA = Math.round(8 * 0.8); // 6
+        let countB = 8 - countA; // 2
+
+        if (shuffledA.length < countA) {
+          countA = shuffledA.length;
+          countB = 8 - countA;
+        }
+        if (shuffledB.length < countB) {
+          countB = shuffledB.length;
+          countA = 8 - countB;
+        }
+
+        const distractors = [...shuffledA.slice(0, countA), ...shuffledB.slice(0, countB)];
+
+        const allNine = [target, ...distractors].sort(() => Math.random() - 0.5);
+
+        return {
+          target: target,
+          type: qType,
+          options: allNine
+        };
+      });
+
+      // Reset Session Variables
+      state.currentIndex = 0;
+      state.score = 0;
+      state.streak = 0;
+      state.maxStreak = 0;
+      state.sessionResults = [];
+      state.startTime = Date.now();
+
+      // Switch view
+      showScreen('playScreen');
+      renderCurrentQuestion();
+    }
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.view-screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // --- Render Question ---
+    function renderCurrentQuestion() {
+      if (state.currentIndex >= state.quizQueue.length) {
+        finishQuizSession();
+        return;
+      }
+
+      state.answered = false;
+      const q = state.quizQueue[state.currentIndex];
+      state.currentQuestion = q;
+      state.questionStartTime = Date.now();
+
+      // Update HUD
+      document.getElementById('hudProgress').textContent = `${state.currentIndex + 1} / ${state.quizQueue.length}`;
+      document.getElementById('hudScore').textContent = state.score;
+      
+      const pct = (state.currentIndex / state.quizQueue.length) * 100;
+      document.getElementById('progressBarFill').style.width = `${pct}%`;
+
+      // Update Streak
+      const streakBadge = document.getElementById('streakBadge');
+      if (state.streak >= 2) {
+        streakBadge.style.display = 'inline-block';
+        streakBadge.textContent = `🔥 ${state.streak} 連對!`;
+      } else {
+        streakBadge.style.display = 'none';
+      }
+
+      // Hide Next button & drawer
+      document.getElementById('btnNextQuestion').style.display = 'none';
+      document.getElementById('explanationDrawer').classList.remove('active');
+
+      const isZhToEn = q.type === 'ZH_TO_EN';
+
+      // Setup Question Hero Card
+      const qTypeBadge = document.getElementById('qTypeBadge');
+      const qMainText = document.getElementById('qMainText');
+      const qPronounceBtn = document.getElementById('qPronounceBtn');
+      const qPosText = document.getElementById('qPosText');
+      const qPhoneticText = document.getElementById('qPhoneticText');
+
+      if (isZhToEn) {
+        qTypeBadge.textContent = `中翻英 • 請選出正確英文單字 (U${q.target.unit})`;
+        qTypeBadge.style.color = '#c7d2fe';
+        qMainText.innerHTML = `<span>${q.target.definition}</span>`;
+        qPronounceBtn.style.display = 'none'; // Don't give away voice yet
+        qPosText.textContent = q.target.pos ? `[${q.target.pos}]` : '';
+        qPhoneticText.textContent = '';
+      } else {
+        qTypeBadge.textContent = `英翻中 • 請選出正確中文釋義 (U${q.target.unit})`;
+        qTypeBadge.style.color = '#99f6e4';
+        qMainText.innerHTML = `<span>${q.target.word}</span> <button class="pronounce-btn" title="點擊發音" onclick="speakCurrentWord()"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg></button>`;
+        qPosText.textContent = q.target.pos ? `[${q.target.pos}]` : '';
+        qPhoneticText.textContent = q.target.phonetic ? `/${q.target.phonetic}/` : '';
+        
+        // Auto pronounce in EN_TO_ZH mode
+        speakWord(q.target.word);
+      }
+
+      // Populate 9-Choice Matrix Buttons
+      const matrixGrid = document.getElementById('matrixButtonsGrid');
+      matrixGrid.innerHTML = '';
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'matrix-btn';
+        btn.id = `optBtn_${idx}`;
+        
+        const optionText = isZhToEn ? opt.word : opt.definition;
+        
+        btn.innerHTML = `
+          <div class="btn-key-badge">${idx + 1}</div>
+          <div class="btn-text-content">${optionText}</div>
+        `;
+
+        btn.onclick = () => handleUserSelection(idx);
+        matrixGrid.appendChild(btn);
+      });
+
+      // Start Countdown Timer if configured
+      startQuestionTimer();
+    }
+
+    // --- Countdown Timer Logic ---
+    function startQuestionTimer() {
+      clearInterval(state.timerInterval);
+      const timerContainer = document.getElementById('timerBarContainer');
+      const timerFill = document.getElementById('timerBarFill');
+
+      if (state.timeLimitPerQuestion <= 0) {
+        timerContainer.style.display = 'none';
+        return;
+      }
+
+      timerContainer.style.display = 'block';
+      const durationMs = state.timeLimitPerQuestion * 1000;
+      state.timeLeftMs = durationMs;
+      timerFill.style.width = '100%';
+      timerFill.style.background = 'var(--warning)';
+
+      const intervalStep = 50;
+      state.timerInterval = setInterval(() => {
+        state.timeLeftMs -= intervalStep;
+        const ratio = Math.max(0, state.timeLeftMs / durationMs);
+        timerFill.style.width = `${ratio * 100}%`;
+
+        if (ratio < 0.3) {
+          timerFill.style.background = 'var(--accent)';
+        }
+
+        if (state.timeLeftMs <= 0) {
+          clearInterval(state.timerInterval);
+          handleTimeOut();
+        }
+      }, intervalStep);
+    }
+
+    function handleTimeOut() {
+      if (state.answered) return;
+      handleUserSelection(-1); // -1 signifies timeout
+    }
+
+    // --- Handle User Answer Selection ---
+    function handleUserSelection(chosenIdx) {
+      if (state.answered) return;
+      state.answered = true;
+      clearInterval(state.timerInterval);
+
+      const timeSpent = ((Date.now() - state.questionStartTime) / 1000).toFixed(1);
+      const q = state.currentQuestion;
+      const target = q.target;
+      
+      const correctIdx = q.options.findIndex(opt => opt.word.toLowerCase() === target.word.toLowerCase());
+      const isCorrect = (chosenIdx === correctIdx);
+
+      // Pronounce word when answer is revealed
+      speakWord(target.word);
+
+      // Highlight options
+      const buttons = document.querySelectorAll('.matrix-btn');
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === correctIdx) {
+          btn.classList.add('correct');
+        } else if (idx === chosenIdx && !isCorrect) {
+          btn.classList.add('wrong');
+        } else {
+          btn.classList.add('dimmed');
+        }
+      });
+
+      // Update Scoring & Streaks
+      if (isCorrect) {
+        state.score += 10 + Math.min(state.streak * 2, 10);
+        state.streak++;
+        if (state.streak > state.maxStreak) state.maxStreak = state.streak;
+        
+        // Micro celebration
+        if (state.streak % 5 === 0) {
+          confetti({ particleCount: 40, spread: 60, origin: { y: 0.8 } });
+        }
+      } else {
+        state.streak = 0;
+      }
+
+      // Record result
+      const chosenWordObj = (chosenIdx >= 0) ? q.options[chosenIdx] : null;
+      state.sessionResults.push({
+        target: target,
+        type: q.type,
+        userChoice: chosenWordObj,
+        isCorrect: isCorrect,
+        timeSpent: timeSpent
+      });
+
+      // Show Explanation Drawer
+      showExplanation(target);
+
+      // Show Next button or automatically advance
+      const nextBtn = document.getElementById('btnNextQuestion');
+      nextBtn.style.display = 'inline-flex';
+
+      // Auto advance on correct answer after 1.4s
+      if (isCorrect) {
+        setTimeout(() => {
+          if (state.answered && state.currentIndex === state.quizQueue.indexOf(q)) {
+            advanceToNextQuestion();
+          }
+        }, 1300);
+      }
+    }
+
+    function showExplanation(target) {
+      document.getElementById('expWord').textContent = target.word;
+      document.getElementById('expPhonetic').textContent = target.phonetic ? `/${target.phonetic}/` : '';
+      document.getElementById('expPos').textContent = target.pos ? `[${target.pos}]` : '';
+      document.getElementById('expDef').textContent = target.definition;
+      document.getElementById('expExEn').textContent = target.example_en || '';
+      document.getElementById('expExZh').textContent = target.example_zh || '';
+      document.getElementById('explanationDrawer').classList.add('active');
+    }
+
+    function advanceToNextQuestion() {
+      state.currentIndex++;
+      renderCurrentQuestion();
+    }
+
+    // --- Keyboard Shortcut Handler ---
+    function setupKeyboardListeners() {
+      window.addEventListener('keydown', (e) => {
+        // Only active during quiz play screen
+        if (!document.getElementById('playScreen').classList.contains('active')) return;
+
+        // Space / Enter for next question
+        if (e.key === ' ' || e.key === 'Enter') {
+          if (state.answered) {
+            e.preventDefault();
+            advanceToNextQuestion();
+            return;
+          }
+        }
+
+        // Keys 1 ~ 9
+        const keyNum = parseInt(e.key);
+        if (!isNaN(keyNum) && keyNum >= 1 && keyNum <= 9) {
+          if (!state.answered) {
+            e.preventDefault();
+            handleUserSelection(keyNum - 1);
+          }
+        }
+      });
+    }
+
+    // --- Speech Synthesis (Pronunciation) ---
+    function speakCurrentWord() {
+      if (state.currentQuestion && state.currentQuestion.target) {
+        speakWord(state.currentQuestion.target.word);
+      }
+    }
+
+    function speakWord(text) {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel(); // Cancel any ongoing speech
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // --- Finish Quiz & Render Report ---
+    function finishQuizSession() {
+      clearInterval(state.timerInterval);
+      showScreen('resultsScreen');
+
+      const total = state.sessionResults.length;
+      const correctCount = state.sessionResults.filter(r => r.isCorrect).length;
+      const wrongCount = total - correctCount;
+      const percentage = Math.round((correctCount / total) * 100);
+
+      // Calculate Average Time
+      const totalTime = state.sessionResults.reduce((sum, r) => sum + parseFloat(r.timeSpent), 0);
+      const avgTime = (totalTime / total).toFixed(1);
+
+      // UI Display
+      document.getElementById('resScoreNum').textContent = percentage;
+      document.getElementById('resCorrectCount').textContent = correctCount;
+      document.getElementById('resWrongCount').textContent = wrongCount;
+      document.getElementById('resMaxStreak').textContent = state.maxStreak;
+      document.getElementById('resAvgTime').textContent = `${avgTime}s`;
+
+      // Grade Badge & Feedback
+      const gradeBadge = document.getElementById('resGradeBadge');
+      const feedbackText = document.getElementById('resFeedbackText');
+
+      if (percentage === 100) {
+        gradeBadge.textContent = '👑 SSS 級 • 滿分神手';
+        gradeBadge.style.color = '#34d399';
+        feedbackText.textContent = '太不可思議了！100% 全部答對，單字敏銳度頂尖無比！';
+        confetti({ particleCount: 120, spread: 90, origin: { y: 0.6 } });
+      } else if (percentage >= 90) {
+        gradeBadge.textContent = '🌟 S 級 • 單字大師';
+        gradeBadge.style.color = '#818cf8';
+        feedbackText.textContent = '卓越的表現！精熟度極高，幾乎零失誤！';
+        confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
+      } else if (percentage >= 75) {
+        gradeBadge.textContent = '💪 A 級 • 表現優異';
+        gradeBadge.style.color = '#2dd4bf';
+        feedbackText.textContent = '基礎相當穩固！建議針對少數錯題進行加強複習。';
+      } else if (percentage >= 60) {
+        gradeBadge.textContent = '⚡ B 級 • 及格達標';
+        gradeBadge.style.color = '#fbbf24';
+        feedbackText.textContent = '成功及格！可善用「專攻錯題重測」把不會的單字攻克！';
+      } else {
+        gradeBadge.textContent = '🌱 C 級 • 潛力充沛';
+        gradeBadge.style.color = '#fb7185';
+        feedbackText.textContent = '別氣餒！多測幾次九宮格能大幅提升直覺反應力，繼續加油！';
+      }
+
+      // Show/Hide Retest Wrong Button
+      const btnRetest = document.getElementById('btnRetestWrong');
+      if (wrongCount > 0) {
+        btnRetest.style.display = 'inline-flex';
+        document.getElementById('retestWrongCount').textContent = wrongCount;
+      } else {
+        btnRetest.style.display = 'none';
+      }
+
+      // Render Detailed Review Items
+      renderDetailedReviewList();
+
+      // Save to History Record
+      saveHistoryRecord({
+        date: new Date().toLocaleString('zh-TW', { hour12: false }),
+        score: percentage,
+        correctCount: correctCount,
+        total: total,
+        mode: state.quizMode,
+        units: [...state.selectedUnits]
+      });
+    }
+
+    function renderDetailedReviewList() {
+      const container = document.getElementById('reviewItemsList');
+      container.innerHTML = '';
+
+      state.sessionResults.forEach((res, idx) => {
+        const item = document.createElement('div');
+        item.className = `review-item-card ${res.isCorrect ? 'is-correct' : 'is-wrong'}`;
+
+        const isZhToEn = res.type === 'ZH_TO_EN';
+        let userChoiceText = '未作答 (超時)';
+        if (res.userChoice) {
+          userChoiceText = isZhToEn ? res.userChoice.word : res.userChoice.definition;
+        }
+
+        item.innerHTML = `
+          <div class="review-idx">#${idx + 1}</div>
+          <div class="review-main-content">
+            <div class="review-term-row">
+              <span class="review-term-word" onclick="speakWord('${res.target.word}')" style="cursor:pointer;" title="點擊發音">
+                ${res.target.word} 🔊
+              </span>
+              <span class="review-term-phonetic">${res.target.phonetic ? '/' + res.target.phonetic + '/' : ''}</span>
+              <span style="font-size:0.8rem; color:#94a3b8;">[${res.target.pos || ''}]</span>
+              <span class="review-term-def">${res.target.definition}</span>
+            </div>
+            <div class="review-user-ans">
+              您的選擇：<strong style="color:${res.isCorrect ? '#34d399' : '#fb7185'};">${userChoiceText}</strong> 
+              • 耗時 ${res.timeSpent}s • Unit ${res.target.unit}
+            </div>
+            ${res.target.example_en ? `<div style="font-size:0.85rem; color:#cbd5e1; margin-top:0.2rem;">例句：${res.target.example_en}</div>` : ''}
+          </div>
+          <div>
+            <span class="review-badge-status ${res.isCorrect ? 'badge-status-correct' : 'badge-status-wrong'}">
+              ${res.isCorrect ? '✅ 答對' : '❌ 答錯'}
+            </span>
+          </div>
+        `;
+
+        container.appendChild(item);
+      });
+    }
+
+    // --- Retest Actions ---
+    function retestOnlyWrongWords() {
+      const wrongWords = state.sessionResults
+        .filter(r => !r.isCorrect)
+        .map(r => r.target);
+
+      if (wrongWords.length === 0) return;
+
+      // Unique words
+      const uniqueWords = Array.from(new Set(wrongWords.map(w => w.word)))
+        .map(wStr => wrongWords.find(w => w.word === wStr));
+
+      startQuizSession(uniqueWords);
+    }
+
+    function restartWithSameConfig() {
+      startQuizSession();
+    }
+
+    function backToSetup() {
+      showScreen('setupScreen');
+    }
+
+    function exitQuizConfirm() {
+      if (confirm('確定要結束本次測驗並查看目前成績嗎？')) {
+        finishQuizSession();
+      }
+    }
+
+    // --- History Storage & Modal ---
+    function saveHistoryRecord(record) {
+      let list = JSON.parse(localStorage.getItem('vocab_quiz_history_book2') || '[]');
+      list.unshift(record);
+      if (list.length > 50) list = list.slice(0, 50); // Keep max 50 records
+      localStorage.setItem('vocab_quiz_history_book2', JSON.stringify(list));
+    }
+
+    function openHistoryModal() {
+      const modal = document.getElementById('historyModal');
+      const body = document.getElementById('historyModalBody');
+      modal.classList.add('active');
+
+      const list = JSON.parse(localStorage.getItem('vocab_quiz_history_book2') || '[]');
+      if (list.length === 0) {
+        body.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:2rem;">尚無歷史測驗紀錄。</div>';
+        return;
+      }
+
+      body.innerHTML = list.map(item => `
+        <div class="history-card">
+          <div>
+            <div style="font-weight:700; font-size:1.05rem; color:#ffffff;">
+              得分：<span style="color:${item.score >= 80 ? '#34d399' : (item.score >= 60 ? '#fbbf24' : '#fb7185')};">${item.score} 分</span> 
+              <span style="font-size:0.85rem; color:var(--text-muted);">(${item.correctCount}/${item.total} 題)</span>
+            </div>
+            <div style="font-size:0.82rem; color:var(--text-muted); margin-top:0.2rem;">
+              模式：${item.mode === 'ZH_TO_EN' ? '中翻英' : (item.mode === 'EN_TO_ZH' ? '英翻中' : '混合模式')} • 單元：U${item.units.join(', U')}
+            </div>
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-light); text-align:right;">
+            ${item.date}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function closeHistoryModal() {
+      document.getElementById('historyModal').classList.remove('active');
+    }
+
+    function clearAllHistory() {
+      if (confirm('確定要清空所有歷史測驗紀錄嗎？')) {
+        localStorage.removeItem('vocab_quiz_history_book2');
+        openHistoryModal();
+      }
+    }
+  </script>
+
+</body>
+</html>
