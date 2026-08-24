@@ -467,8 +467,25 @@
       }
 
       .translation-grid-container {
-        display: block !important;
+        column-span: all !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr 1fr 1fr !important;
+        gap: 0.6rem 1.2rem !important;
         margin-bottom: 1.5rem !important;
+      }
+
+      .answer-key-section {
+        column-span: all !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      .answer-table {
+        width: 100% !important;
+        table-layout: fixed !important;
+        font-size: 0.75rem !important;
       }
 
       .translation-question-item {
@@ -1377,9 +1394,12 @@
 
         const gridContainer = document.createElement('div');
         gridContainer.className = 'translation-grid-container';
+        gridContainer.style.columnSpan = 'all';
+        gridContainer.style.width = '100%';
+        gridContainer.style.boxSizing = 'border-box';
         gridContainer.style.display = 'grid';
-        gridContainer.style.gridTemplateColumns = '1fr 1fr';
-        gridContainer.style.gap = '0.6rem 2.5rem';
+        gridContainer.style.gridTemplateColumns = '1fr 1fr 1fr 1fr';
+        gridContainer.style.gap = '0.6rem 1.2rem';
         gridContainer.style.marginBottom = '1.5rem';
 
         vocabTranslationQuestions.forEach((q) => {
