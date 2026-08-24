@@ -1452,8 +1452,12 @@
         pool = state.allVocabList.filter(v => state.selectedUnits.includes(v.unit));
       }
 
-      if (pool.length < 9) {
-        alert(`所選範圍的單字量只有 ${pool.length} 個，九宮格測驗至少需要 9 個單字以上！請多選取幾個單元。`);
+      if (pool.length === 0) {
+        alert('所選範圍內沒有單字！');
+        return;
+      }
+      if (state.allVocabList.length < 9) {
+        alert('總單字庫少於 9 個，無法進行九宮格測驗！');
         return;
       }
 
@@ -1472,10 +1476,26 @@
           qType = Math.random() > 0.5 ? 'ZH_TO_EN' : 'EN_TO_ZH';
         }
 
-        // Pick 8 distractors from the full pool (prefer different base words)
-        const otherPool = state.allVocabList.filter(w => w.word.toLowerCase() !== target.word.toLowerCase());
-        const shuffledOthers = [...otherPool].sort(() => Math.random() - 0.5);
-        const distractors = shuffledOthers.slice(0, 8);
+        // Pick 8 distractors: 80% (6) from selected units, 20% (2) from other units
+        const poolA = state.allVocabList.filter(w => state.selectedUnits.includes(w.unit) && w.word.toLowerCase() !== target.word.toLowerCase());
+        const poolB = state.allVocabList.filter(w => !state.selectedUnits.includes(w.unit) && w.word.toLowerCase() !== target.word.toLowerCase());
+
+        const shuffledA = [...poolA].sort(() => Math.random() - 0.5);
+        const shuffledB = [...poolB].sort(() => Math.random() - 0.5);
+
+        let countA = Math.round(8 * 0.8); // 6
+        let countB = 8 - countA; // 2
+
+        if (shuffledA.length < countA) {
+          countA = shuffledA.length;
+          countB = 8 - countA;
+        }
+        if (shuffledB.length < countB) {
+          countB = shuffledB.length;
+          countA = 8 - countB;
+        }
+
+        const distractors = [...shuffledA.slice(0, countA), ...shuffledB.slice(0, countB)];
 
         const allNine = [target, ...distractors].sort(() => Math.random() - 0.5);
 
