@@ -1222,6 +1222,11 @@
           專攻錯題重測 (<span id="retestWrongCount">0</span> 題)
         </button>
 
+        <button id="btnDownloadWrong" class="btn-cta btn-cta-secondary" onclick="downloadWrongWords()" style="display:none;">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          下載錯題清單
+        </button>
+
         <button class="btn-cta btn-cta-secondary" onclick="backToSetup()">
           <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
           重新調整設定
@@ -1823,13 +1828,16 @@
         feedbackText.textContent = '別氣餒！多測幾次九宮格能大幅提升直覺反應力，繼續加油！';
       }
 
-      // Show/Hide Retest Wrong Button
+      // Show/Hide Retest Wrong Button & Download
       const btnRetest = document.getElementById('btnRetestWrong');
+      const btnDownloadWrong = document.getElementById('btnDownloadWrong');
       if (wrongCount > 0) {
         btnRetest.style.display = 'inline-flex';
+        if (btnDownloadWrong) btnDownloadWrong.style.display = 'inline-flex';
         document.getElementById('retestWrongCount').textContent = wrongCount;
       } else {
         btnRetest.style.display = 'none';
+        if (btnDownloadWrong) btnDownloadWrong.style.display = 'none';
       }
 
       // Render Detailed Review Items
@@ -1901,6 +1909,38 @@
         .map(wStr => wrongWords.find(w => w.word === wStr));
 
       startQuizSession(uniqueWords);
+    }
+
+    function downloadWrongWords() {
+      const wrongWords = state.sessionResults
+        .filter(r => !r.isCorrect)
+        .map(r => r.target);
+
+      if (wrongWords.length === 0) return;
+
+      const uniqueWords = Array.from(new Set(wrongWords.map(w => w.word)))
+        .map(wStr => wrongWords.find(w => w.word === wStr));
+
+      let content = "錯誤單字清單 (九宮格測驗)\n\n";
+      uniqueWords.forEach((w, idx) => {
+        content += `${idx + 1}. ${w.word} [${w.pos || ''}] /${w.phonetic || ''}/\n`;
+        content += `   釋義: ${w.definition}\n`;
+        if (w.example_en) content += `   例句: ${w.example_en}\n`;
+        if (w.example_zh) content += `   中譯: ${w.example_zh}\n`;
+        content += "\n";
+      });
+
+      const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const today = new Date();
+      const dateStr = today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
+      a.download = `錯題清單_${dateStr}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
 
     function restartWithSameConfig() {
